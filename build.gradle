@@ -1,0 +1,53 @@
+defaultTasks 'clean', 'snapshotMainSharedLibrary'
+
+// Apply plugins
+apply plugin: 'c'
+
+// Basic project information
+group = 'LinkedNeurons'
+archivesBaseName = 'njgr'
+version = '1.0.0-SNAPSHOT'
+
+// Extended project information
+ext.projectName = 'NeuronsJustGotReal'
+ext.inceptionYear = '2014'
+ext.packaging = 'tar'
+ext.url = ''
+ext.description = 'A C library for neural networks.'
+ext.organization = 'LinkedNeurons'
+
+// Define variables
+ext.buildNumber = '0'
+
+libraries {
+    main {}
+}
+
+executables {
+    test {}
+}
+
+buildTypes {
+    debug {}
+    snapshot {}
+    release {}
+}
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {}
+}
+
+binaries.all {
+    cCompiler.args "-Wall", "-Wextra"
+    cCompiler.args "-O2"
+
+    if (toolChain in Gcc) {
+        cCompiler.args "--std=c99"
+        if (buildType == buildTypes.debug) {
+            cCompiler.args "-g"
+        }
+    }
+}
