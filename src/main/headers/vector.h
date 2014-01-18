@@ -4,25 +4,26 @@
 
 #include <stdlib.h>
 
-typedef vector *vector_t;
 
-struct vector_t {
+typedef struct vector {
     size_t size, capacity;
-    void*  tab;
-};
+    float*  tab;
+} vector;
 
-vector newVector(size_t capacity);
+vector *newVector(size_t capacity);
 
-void add    (vector v, void *element);
-void remove (vector v, void *element);
-void at     (vector v, int i);
+//those functions add at the end of the vector
+void  add   (vector *v, float element);
+void  delete(vector *v);
+float at    (vector *v, unsigned int i);
 
-void insert(vector v, int i, void *element);
+void insertAt(vector *v, unsigned int position, float element);
+void removeAt(vector *v, unsigned int position);
 
-void foldl(vector v, void (*f)(void *));
-void foldr(vector v, void (*f)(void *));
+void foldl(vector *v, void (*f)(float, float));
+void foldr(vector *v, void (*f)(float, float));
 
-void empty(vector v);
+void empty(vector *v);
 
 
 #endif
