@@ -5,11 +5,11 @@
 #include <stdlib.h>
 #include "vector.h"
 
-typedef network *network_s;
-
-struct network_s {
+typedef struct network {
 	size_t  depth;
-	vector  layer;
-};
+	vector  **layers;
+} network;
+
+void pretty_print(network *n);
 
 #endif
