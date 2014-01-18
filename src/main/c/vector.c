@@ -40,45 +40,45 @@ void delete(vector *v) {
     resize(v);
 }
 
-float at(vector *v, unsigned int i) {
+float at(vector *v, size_t i) {
     return v->tab[i];
 }
 
-void insertAt(vector *v, unsigned int position, float element) {
+void insertAt(vector *v, size_t position, float element) {
     v->size++;
     resize(v);
 
-    for(unsigned int i = v->size; i >= position; ++i) {
+    for(size_t i = v->size; i >= position; ++i) {
         v->tab[i] = v->tab[i - 1];
     }
 
     v->tab[position] = element;
 }
 
-void removeAt(vector *v, unsigned int position) {
+void removeAt(vector *v, size_t position) {
     v->size--;
     resize(v);
 
-    for(unsigned int i = position; i < v->size; ++i) {
+    for(size_t i = position; i < v->size; ++i) {
         v->tab[i] = v->tab[i + 1];
     }
 }
 
-float foldl(vector *v, void (*f)(float, float), float element) {
+float foldl(vector *v, float (*f)(float, float), float element) {
     if(v->size == 0) { return element; }
     
     for(size_t i = 0; i < v->size; i++) {
-        element = f(element, v->tab[i]);
+        element = (*f)(element, v->tab[i]);
     }
 
     return element;
 }
 
-float foldr(vector *v, void (*f)(float, float), float element) {
+float foldr(vector *v, float (*f)(float, float), float element) {
     if(v->size == 0) { return element; }
     
-    for(size_t i = v->size - 1; i >= 0; i++) {
-        element = f(v->tab[v->size - i], element);
+    for(size_t i = v->size - 1; i != 0; i--) {
+        element = (*f)(v->tab[v->size - i], element);
     }
 
     return element;

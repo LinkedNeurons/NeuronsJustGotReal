@@ -20,8 +20,8 @@ float at    (vector *v, size_t i);
 void insertAt(vector *v, size_t position, float element);
 void removeAt(vector *v, size_t position);
 
-float foldl(vector *v, void (*f)(float, float), float element);
-float foldr(vector *v, void (*f)(float, float), float element);
+float foldl(vector *v, float (*f)(float, float), float element);
+float foldr(vector *v, float (*f)(float, float), float element);
 
 void empty(vector *v);
 
