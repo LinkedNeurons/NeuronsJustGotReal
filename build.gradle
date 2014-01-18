@@ -41,13 +41,15 @@ buildscript {
 }
 
 binaries.all {
-    cCompiler.args "-Wall", "-Wextra"
-    cCompiler.args "-O2"
+    cCompiler.args "-Wall"
 
-    if (toolChain in Gcc) {
+    if (toolChain in Gcc || toolChain in Clang) {
+        cCompiler.args "-Wextra"
         cCompiler.args "--std=c99"
         if (buildType == buildTypes.debug) {
             cCompiler.args "-g"
+        } else {
+            cCompiler.args "-O3"
         }
     }
 }
