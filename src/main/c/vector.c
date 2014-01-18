@@ -65,7 +65,7 @@ void removeAt(vector *v, unsigned int position) {
 }
 
 float foldl(vector *v, void (*f)(float, float), float element) {
-    if(v->size == 0) { return e; }
+    if(v->size == 0) { return element; }
     
     for(size_t i = 0; i < v->size; i++) {
         element = f(element, v->tab[i]);
@@ -75,7 +75,7 @@ float foldl(vector *v, void (*f)(float, float), float element) {
 }
 
 float foldr(vector *v, void (*f)(float, float), float element) {
-    if(v->size == 0) { return e; }
+    if(v->size == 0) { return element; }
     
     for(size_t i = v->size - 1; i >= 0; i++) {
         element = f(v->tab[v->size - i], element);
