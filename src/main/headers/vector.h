@@ -15,10 +15,10 @@ vector *newVector(size_t capacity);
 //those functions add at the end of the vector
 void  add   (vector *v, float element);
 void  delete(vector *v);
-float at    (vector *v, unsigned int i);
+float at    (vector *v, size_t i);
 
-void insertAt(vector *v, unsigned int position, float element);
-void removeAt(vector *v, unsigned int position);
+void insertAt(vector *v, size_t position, float element);
+void removeAt(vector *v, size_t position);
 
 void foldl(vector *v, void (*f)(float, float));
 void foldr(vector *v, void (*f)(float, float));
