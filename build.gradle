@@ -1,4 +1,4 @@
-defaultTasks 'clean', 'snapshotNjgrSharedLibrary', 'snapshotTestExecutable'
+defaultTasks 'clean', 'injectLibs', 'snapshotNjgrSharedLibrary', 'installSnapshotTestExecutable', 'runTests'
 
 // Apply plugins
 apply plugin: 'c'
@@ -48,6 +48,25 @@ buildscript {
     }
     dependencies {}
 }
+
+task injectLibs << {
+    linkSnapshotTestExecutable.doFirst {
+        binaries.all {
+            toolChain.linker.withArguments { args ->
+                args << "-lcunit"
+            }
+        }
+    }
+}
+
+task runTests(type:Exec) {
+    workingDir './build/install/testExecutable/snapshot'
+    commandLine './test'
+}
+
+task test {}
+task snapshot {}
+task release {}
 
 binaries.all {
     cCompiler.args "-Wall"
