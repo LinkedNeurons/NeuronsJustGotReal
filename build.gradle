@@ -29,9 +29,19 @@ executables {
 }
 
 sources {
+    njgr {
+        c {
+            source {
+                include "**/*.c"
+            }
+        }
+    }
     test {
         c {
             lib libraries.njgr
+            source {
+                include "**/*.c"
+            }
         }
     }
 }
