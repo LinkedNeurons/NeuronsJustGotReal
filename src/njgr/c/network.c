@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#include "../headers/network.h"
+#include "network.h"
 
 void print_layer(vector *layer, size_t n)
 {

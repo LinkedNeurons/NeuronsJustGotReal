@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <math.h>
 
-#include "../headers/vector.h"
+#include "vector.h"
 
 vector *newVector(size_t capacity) {
     vector *v = malloc(sizeof(struct vector));
