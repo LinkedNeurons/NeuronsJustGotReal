@@ -19,3 +19,4 @@
 
 #Gradle build folder
 .gradle/*
+build/*
