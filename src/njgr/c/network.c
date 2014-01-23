@@ -3,12 +3,12 @@
 
 #include "network.h"
 
-void print_layer(vector *layer, size_t n)
+void print_layer(Vector *layer, size_t n)
 {
     printf("    layer %2lu : ", n);
 
-    for(size_t i = 0; i<layer->size; ++i)
-        printf("%5f ", at(layer, i));
+    for(size_t i = 0; i < layer->size; ++i)
+        printf("%5f ", vector_at(layer, i));
     
     printf("/n");
 }

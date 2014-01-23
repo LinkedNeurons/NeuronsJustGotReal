@@ -7,7 +7,7 @@
 
 typedef struct network {
 	size_t  depth;
-	vector  **layers;
+	Vector  **layers;
 } network;
 
 void pretty_print(network *n);
