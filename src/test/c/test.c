@@ -2,6 +2,8 @@
 #include <CUnit/Basic.h>
 
 #include "math/test_matrix.h"
+#include "math/test_vector.h"
+
 
 int main() {
     
@@ -9,7 +11,8 @@ int main() {
         return CU_get_error();
 
     int success = 1
-        && add_matrix_tests();
+        && add_matrix_tests() 
+        && add_vector_tests();
     
     if (success) {
         CU_basic_set_mode(CU_BRM_VERBOSE);

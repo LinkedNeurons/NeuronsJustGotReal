@@ -2,69 +2,44 @@
 #include <stdio.h>
 #include <math.h>
 
-#include "../headers/vector.h"
+#include "vector.h"
 
-vector *newVector(size_t capacity) {
-    vector *v = malloc(sizeof(struct vector));
-    v->tab    = malloc(capacity * sizeof(float));
-    v->size = 0; v->capacity = capacity;
+Vector *vector_init(size_t size, double *tab) {
+	Vector *v = malloc(sizeof(Vector));
+	v->tab    = malloc(size * sizeof(double));
+	v->size   = size;
 
-    return v;
+	for(size_t i = 0; i < size; ++i) { v->tab[i] = tab[i]; }
+
+	return v;
 }
 
-void resize(vector *v) {
-    if(v->size == v->capacity) {
+Vector *vector_create(size_t size) {
+	Vector *v = malloc(sizeof(Vector));
+	v->tab    = malloc(size * sizeof(double));
+	v->size   = size;
 
-        int capacity = v->capacity;
-        v->capacity  = (int)ceil(1.5 * v->capacity);
+	for(size_t i = 0; i < size; ++i) { v->tab[i] = 0; }
 
-        float *tab = malloc(v->capacity * sizeof(float));
-        for(int i = 0; i < capacity; ++i) {
-            tab[i] = v->tab[i];
-        }
-
-        free(v->tab);
-        v->tab = tab;
-    }
+	return v;
 }
 
-void add(vector *v, float element) {
-    v->size++;
-    resize(v);
+Vector *vector_clone(Vector *v) {
+	Vector *clone = malloc(sizeof(Vector));
+	clone->tab    = malloc(v->size * sizeof(double));
+	clone->size   = v->size;
 
-    v->tab[v->size] = element;
+	for(size_t i = 0; i < v->size; ++i) { clone->tab[i] = v->tab[i]; }
+
+	return v;
 }
 
-void delete(vector *v) {
-    v->size--;
-    resize(v);
-}
-
-float at(vector *v, size_t i) {
+float vector_at(Vector *v, size_t i) {
     return v->tab[i];
 }
 
-void insertAt(vector *v, size_t position, float element) {
-    v->size++;
-    resize(v);
 
-    for(size_t i = v->size; i >= position; ++i) {
-        v->tab[i] = v->tab[i - 1];
-    }
-
-    v->tab[position] = element;
-}
-
-void removeAt(vector *v, size_t position) {
-    v->size--;
-    resize(v);
-
-    for(size_t i = position; i < v->size; ++i) {
-        v->tab[i] = v->tab[i + 1];
-    }
-}
-
-float foldl(vector *v, float (*f)(float, float), float element) {
+float vector_foldl(Vector *v, float (*f)(float, float), float element) {
     if(v->size == 0) { return element; }
     
     for(size_t i = 0; i < v->size; i++) {
@@ -74,7 +49,7 @@ float foldl(vector *v, float (*f)(float, float), float element) {
     return element;
 }
 
-float foldr(vector *v, float (*f)(float, float), float element) {
+float vector_foldr(Vector *v, float (*f)(float, float), float element) {
     if(v->size == 0) { return element; }
     
     for(size_t i = v->size - 1; i != 0; i--) {
