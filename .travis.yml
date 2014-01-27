@@ -1,14 +1,13 @@
 language: c
 compiler: clang
 install: 
-    - clang --version
     - wget 'http://downloads.sourceforge.net/project/cunit/CUnit/2.1-2/CUnit-2.1-2-src.tar.bz2' -O cunit.tar.bz2
     - tar -xjf cunit.tar.bz2
     - cd CUnit-2.1-2/
     - ./configure --prefix=$HOME/local
     - make && make install
     - find $HOME/local
-    - export $PATH=$PATH:$HOME/local
+    - export PATH=$PATH:$HOME/local
 script: gradle clean injectLibs snapshotNjgrSharedLibrary installSnapshotTestExecutable runTests -PcIncludes=$HOME/local
 notifications:
     on_success: never
