@@ -1,6 +1,9 @@
 language: c
 compiler: clang
-install: ./gradlew clean injectLibs snapshotNjgrSharedLibrary installSnapshotTestExecutable runTests
+install: gradle clean injectLibs snapshotNjgrSharedLibrary installSnapshotTestExecutable runTests
 notifications:
     on_success: never
     on_failure: always
+env:
+    global:
+        - TERM=dumb
