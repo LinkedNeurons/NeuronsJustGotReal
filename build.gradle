@@ -67,7 +67,9 @@ task injectLibs << {
     linkSnapshotTestExecutable.doFirst {
         binaries.all {
             toolChain.linker.withArguments { args ->
-                args << "-lcunit"
+                if (args.remove('-lcunit')) {
+                    args << "-lcunit"
+                }
             }
         }
     }
