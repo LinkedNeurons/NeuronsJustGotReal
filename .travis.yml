@@ -14,3 +14,4 @@ notifications:
 env:
     global:
         - TERM=dumb
+        - LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
