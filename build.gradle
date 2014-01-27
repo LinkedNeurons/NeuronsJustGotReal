@@ -27,7 +27,7 @@ executables {
     test {
         binaries.all {
             cCompiler.args '-I', cIncludes
-            linker.args '-L', cLibs
+            linker.args '-L' + cLibs
         }
     }
 }
