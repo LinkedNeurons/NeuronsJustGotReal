@@ -4,16 +4,13 @@ install:
     - wget 'http://downloads.sourceforge.net/project/cunit/CUnit/2.1-2/CUnit-2.1-2-src.tar.bz2' -O cunit.tar.bz2
     - tar -xjf cunit.tar.bz2
     - cd CUnit-2.1-2/
-    - ./configure --prefix=$HOME/local
-    - make && make install
-    - find $HOME/local
-    - export PATH=$PATH:$HOME/local/
+    - ./configure --prefix=/usr/local/
+    - make && sudo make install
     - cd ..
-script: gradle clean injectLibs snapshotNjgrSharedLibrary installSnapshotTestExecutable runTests -PcIncludes=$HOME/local/include -PcLibs=$HOME/local/libs
+script: gradle clean injectLibs snapshotNjgrSharedLibrary installSnapshotTestExecutable runTests
 notifications:
     on_success: never
     on_failure: always
 env:
     global:
         - TERM=dumb
-        - LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$HOME/local/lib

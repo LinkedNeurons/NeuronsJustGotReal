@@ -16,9 +16,6 @@ ext.url = ''
 ext.description = 'A C library for neural networks.'
 ext.organization = 'LinkedNeurons'
 
-ext.cIncludes = project.hasProperty("cIncludes") ? cIncludes : '/usr/local/include'
-ext.cLibs = project.hasProperty("cLibs") ? cLibs : '/usr/local/lib'
-
 libraries {
     njgr {}
 }
@@ -26,8 +23,7 @@ libraries {
 executables {
     test {
         binaries.all {
-            cCompiler.args '-I', cIncludes
-            linker.args '-L' + cLibs
+            cCompiler.args '-I', "/usr/local/include"
         }
     }
 }
@@ -67,7 +63,7 @@ task injectLibs << {
     linkSnapshotTestExecutable.doFirst {
         binaries.all {
             toolChain.linker.withArguments { args ->
-                if (args.remove('-lcunit')) {
+                if (!args.contains("-lcunit")) {
                     args << "-lcunit"
                 }
             }
