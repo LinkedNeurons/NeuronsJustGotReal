@@ -9,7 +9,7 @@ install:
     - find $HOME/local
     - export PATH=$PATH:$HOME/local/
     - cd ..
-script: gradle clean injectLibs snapshotNjgrSharedLibrary installSnapshotTestExecutable runTests -PcIncludes=$HOME/local/include
+script: gradle clean injectLibs snapshotNjgrSharedLibrary installSnapshotTestExecutable runTests -PcIncludes=$HOME/local/include -PcLibs=$HOME/local/libs
 notifications:
     on_success: never
     on_failure: always

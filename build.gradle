@@ -17,6 +17,7 @@ ext.description = 'A C library for neural networks.'
 ext.organization = 'LinkedNeurons'
 
 ext.cIncludes = project.hasProperty("cIncludes") ? cIncludes : '/usr/local/include'
+ext.cLibs = project.hasProperty("cLibs") ? cLibs : '/usr/local/lib'
 
 libraries {
     njgr {}
@@ -26,6 +27,7 @@ executables {
     test {
         binaries.all {
             cCompiler.args '-I', cIncludes
+            linker.args '-L', cLibs
         }
     }
 }
