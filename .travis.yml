@@ -1,0 +1,5 @@
+language: c
+install: ./gradlew clean injectLibs snapshotNjgrSharedLibrary installSnapshotTestExecutable runTests
+notifications:
+    on_success: never
+    on_failure: always
