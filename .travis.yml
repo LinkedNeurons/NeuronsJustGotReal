@@ -7,7 +7,7 @@ install:
     - cd CUnit-2.1-2/
     - ./configure --prefix=$HOME/local
     - make && make install
-    - tree $HOME/local
+    - find $HOME/local
     - export $PATH=$PATH:$HOME/local
 script: gradle clean injectLibs snapshotNjgrSharedLibrary installSnapshotTestExecutable runTests -PcIncludes=$HOME/local
 notifications:
