@@ -7,8 +7,9 @@ install:
     - ./configure --prefix=$HOME/local
     - make && make install
     - find $HOME/local
-    - export PATH=$PATH:$HOME/local
-script: gradle clean injectLibs snapshotNjgrSharedLibrary installSnapshotTestExecutable runTests -PcIncludes=$HOME/local
+    - export PATH=$PATH:$HOME/local/
+    - cd ..
+script: gradle clean injectLibs snapshotNjgrSharedLibrary installSnapshotTestExecutable runTests -PcIncludes=$HOME/local/include
 notifications:
     on_success: never
     on_failure: always
