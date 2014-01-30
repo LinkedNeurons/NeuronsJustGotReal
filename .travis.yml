@@ -6,6 +6,7 @@ install:
     - cd CUnit-2.1-2/
     - ./configure --prefix=/usr/local/
     - make && sudo make install
+    - sudo ldconfig
     - cd ..
 script: gradle clean injectLibs snapshotNjgrSharedLibrary installSnapshotTestExecutable runTests
 notifications:
@@ -15,3 +16,4 @@ env:
     global:
         - TERM=dumb
         - LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
+        - PATH=$PATH:/usr/local/lib
