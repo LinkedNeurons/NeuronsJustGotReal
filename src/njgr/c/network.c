@@ -5,7 +5,7 @@
 
 void feed(Network* network, double* input, size_t num_inputs) {
 	Matrix* column  = IMatrix.init(num_inputs, 1, input);
-	Matrix* weights = network->weigths;
+	Matrix* weights = network->weights;
 
-	Matrix* z = IMatrix.mul(weights, column);
+	Matrix* z = IMatrix.product(weights, column);
 }

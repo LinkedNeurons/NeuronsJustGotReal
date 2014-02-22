@@ -3,7 +3,8 @@
 #define _NETWORK_H_
 
 #include <stdlib.h>
-#include "matrix.h"
+#include "vector.h"
+#include "math/matrix.h"
 
 typedef struct Network {
     Matrix* weights;
@@ -12,6 +13,6 @@ typedef struct Network {
     Vector* biases;
 } Network;
 
-void feed(Network* network, double* inputs);
+void feed(Network* network, double* inputs, size_t num_inputs);
 
 #endif
