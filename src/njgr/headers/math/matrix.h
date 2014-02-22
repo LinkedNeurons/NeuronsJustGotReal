@@ -8,6 +8,10 @@ typedef struct Matrix {
     size_t rows, cols;
 } Matrix;
 
+typedef struct MatrixExpressionFactory {
+	
+} MatrixExpressionFactory;
+
 Matrix* matrix_create(size_t, size_t);
 Matrix* matrix_init(size_t, size_t, const double*);
 void matrix_destroy(Matrix*);
@@ -19,6 +23,13 @@ Matrix* matrix_product(Matrix*, Matrix*);
 Matrix* matrix_mul(Matrix*, double);
 Matrix* matrix_add(Matrix*, Matrix*);
 int matrix_equals(Matrix*, Matrix*);
+
+Matrix* matrix_apply(Matrix*, double (*f)(double)); 
+
+typedef void* (*binary)(void*,void*);
+typedef void* (*unary)(void*);
+MatrixExpressionFactory* mef_chain_binary(binary op, void* a, void* b);
+MatrixExpressionFactory* mef_chain_unary(unary op, void* a);
 
 struct MatrixModule {
     Matrix* (*create)(size_t, size_t);

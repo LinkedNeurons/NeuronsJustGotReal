@@ -3,13 +3,15 @@
 #define _NETWORK_H_
 
 #include <stdlib.h>
-#include "vector.h"
+#include "matrix.h"
 
-typedef struct network {
-	size_t  depth;
-	Vector  **layers;
-} network;
+typedef struct Network {
+    Matrix* weights;
+    double (*functions)(double);
+    Matrix* biases_cache;
+    Vector* biases;
+} Network;
 
-void pretty_print(network *n);
+void feed(Network* network, double* inputs);
 
 #endif
