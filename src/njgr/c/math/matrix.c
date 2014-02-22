@@ -1,6 +1,18 @@
 #include <errno.h>
 #include "math/matrix.h"
 
+struct MatrixModule IMatrix = {
+    .create  = &matrix_create,
+    .init    = &matrix_init,
+    .destroy = &matrix_destroy,
+    .get     = &matrix_get,
+    .set     = &matrix_set,
+    .product = &matrix_product,
+    .mul     = &matrix_mul,
+    .add     = &matrix_add,
+    .equals  = &matrix_equals
+};
+
 Matrix* matrix_create(size_t rows, size_t columns) {
     if (!rows || !columns) {
         errno = EINVAL;

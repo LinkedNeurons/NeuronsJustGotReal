@@ -43,16 +43,6 @@ struct MatrixModule {
     int (*equals)(Matrix*, Matrix*);
 };
 
-struct MatrixModule IMatrix = {
-    .create  = &matrix_create,
-    .init    = &matrix_init,
-    .destroy = &matrix_destroy,
-    .get     = &matrix_get,
-    .set     = &matrix_set,
-    .product = &matrix_product,
-    .mul     = &matrix_mul,
-    .add     = &matrix_add,
-    .equals  = &matrix_equals
-};
+extern struct MatrixModule IMatrix;
 
 #endif // MATRIX_H_
