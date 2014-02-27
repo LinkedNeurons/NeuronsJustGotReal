@@ -2,7 +2,16 @@
 #include <stdio.h>
 #include <math.h>
 
-#include "vector.h"
+#include "math/vector.h"
+
+struct VectorModule IVector = {
+	.init   = &vector_init,
+	.create = &vector_create,
+	.clone  = &vector_clone,
+	.at     = &vector_at,
+	.foldr  = &vector_foldr,
+	.foldl  = &vector_foldl
+};
 
 Vector *vector_init(size_t size, double *tab) {
 	Vector *v = malloc(sizeof(Vector));
@@ -34,27 +43,27 @@ Vector *vector_clone(Vector *v) {
 	return v;
 }
 
-float vector_at(Vector *v, size_t i) {
-    return v->tab[i];
+double vector_at(Vector *v, size_t i) {
+	return v->tab[i];
 }
 
 
-float vector_foldl(Vector *v, float (*f)(float, float), float element) {
-    if(v->size == 0) { return element; }
-    
-    for(size_t i = 0; i < v->size; i++) {
-        element = (*f)(element, v->tab[i]);
-    }
+double vector_foldl(Vector *v, double (*f)(double, double), double element) {
+	if(v->size == 0) { return element; }
+	
+	for(size_t i = 0; i < v->size; i++) {
+		element = (*f)(element, v->tab[i]);
+	}
 
-    return element;
+	return element;
 }
 
-float vector_foldr(Vector *v, float (*f)(float, float), float element) {
-    if(v->size == 0) { return element; }
-    
-    for(size_t i = v->size - 1; i != 0; i--) {
-        element = (*f)(v->tab[v->size - i], element);
-    }
+double vector_foldr(Vector *v, double (*f)(double, double), double element) {
+	if(v->size == 0) { return element; }
+	
+	for(size_t i = v->size - 1; i != 0; i--) {
+		element = (*f)(v->tab[v->size - i], element);
+	}
 
-    return element;
+	return element;
 }

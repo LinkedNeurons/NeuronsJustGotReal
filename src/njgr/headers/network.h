@@ -3,16 +3,22 @@
 #define _NETWORK_H_
 
 #include <stdlib.h>
-#include "vector.h"
+#include "math/vector.h"
 #include "math/matrix.h"
 
+typedef struct ActivationFunction {
+	double (*function)(double);
+	double (*derivative)(double);
+} ActivationFunction;
+
 typedef struct Network {
+	int depth;
     Matrix* weights;
-    double (*functions)(double);
+    ActivationFunction *functions;
     Matrix* biases_cache;
     Vector* biases;
 } Network;
 
-void feed(Network* network, double* inputs, size_t num_inputs);
+void feed(Network* network, Vector* input, Vector** output);
 
 #endif

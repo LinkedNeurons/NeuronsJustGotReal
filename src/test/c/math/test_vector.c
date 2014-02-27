@@ -1,6 +1,6 @@
 #include <errno.h>
 #include <CUnit/CUnit.h>
-#include <vector.h>
+#include <math/vector.h>
 
 void vector_test_init() {
 	size_t size = 4;

@@ -20,3 +20,4 @@
 #Gradle build folder
 .gradle/*
 build/*
+*.swp
