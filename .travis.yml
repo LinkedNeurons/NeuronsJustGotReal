@@ -1,6 +1,6 @@
 language: c
 compiler: clang
-install: 
+install:
     - wget 'http://downloads.sourceforge.net/project/cunit/CUnit/2.1-2/CUnit-2.1-2-src.tar.bz2' -O cunit.tar.bz2
     - tar -xjf cunit.tar.bz2
     - cd CUnit-2.1-2/
@@ -8,7 +8,7 @@ install:
     - make && sudo make install
     - sudo ldconfig
     - cd ..
-script: gradle clean injectLibs snapshotNjgrSharedLibrary installSnapshotTestExecutable runTests
+script: ./gradlew clean injectLibs snapshotNjgrSharedLibrary installSnapshotTestExecutable runTests
 notifications:
     on_success: never
     on_failure: always
