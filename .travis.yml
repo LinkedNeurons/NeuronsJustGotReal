@@ -8,7 +8,7 @@ install:
     - make && sudo make install
     - sudo ldconfig
     - cd ..
-script: ./gradlew clean injectLibs snapshotNjgrSharedLibrary installSnapshotTestExecutable runTests
+script: ./gradlew clean injectLibs njgrSharedLibrary installTestExecutable runTests
 notifications:
     on_success: never
     on_failure: always
