@@ -91,11 +91,11 @@ void matrix_set(Matrix *matrix, size_t row, size_t col, double value) {
 }
 
 void matrix_product(Matrix *m1, Matrix *m2, Matrix **result) {
+	if (m1->cols != m2->rows) {
+		errno = EDOM;
+		return;
+	}
 	if (!*result) {
-		if (m1->cols != m2->rows) {
-			errno = EDOM;
-			return;
-		}
 		*result = malloc(sizeof(Matrix));
 		(*result)->rows = m1->rows;
 		(*result)->cols = m2->cols;

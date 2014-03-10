@@ -9,7 +9,8 @@
 struct NetworkModule INetwork = {
 	.create  = &network_create,
 	.destroy = &network_destroy,
-	.feed    = &network_feed
+	.feed    = &network_feed,
+	.gradient_descent = &network_gradient_descent
 };
 
 Network* network_create(size_t depth, Matrix *weights, ActivationFunction *functions, Vector *biases) {
@@ -39,27 +40,39 @@ void network_destroy(Network *network) {
 	free(network);
 }
 
-void network_feed(Network* network, Vector* input, Vector** output) {
+void network_feed0(Network* network, Vector* input, Matrix** output) {
+	if (!*output) {
+		*output = malloc(sizeof(Matrix) * (network->depth - 1));
+	}
+
 	Matrix* column = NULL;
 	IMatrix.init(input->size, 1, input->tab, &column);
 	Matrix* weights                = network->weights;
 	ActivationFunction *activation = network->functions;
 	Matrix* biases_cache           = network->biases_cache;
 	Matrix* out = NULL;
+	Matrix* m = *output;
 
 	for (size_t i = 1; i < network->depth; ++i) {
 		IMatrix.product(weights, column, &out);
-		IMatrix.add(out, biases_cache, &out);
-		IMatrix.apply(out, activation->function, &out);
+		IMatrix.add    (out, biases_cache, &out);
+		IMatrix.apply  (out, activation->function, &out);
 		free(column);
 		column = out;
+		*m = *out;
 		++weights;
 		++activation;
 		++biases_cache;
+		++m;
 		out = NULL;
 	}
+}
 
-	IMatrix.vectorize(column, output);
+void network_feed(Network* network, Vector* input, Vector** output) {
+	Matrix *out = NULL;
+	network_feed0(network, input, &out);
+	IMatrix.vectorize(out + network->depth - 2, output);
+	IMatrix.destroy_array(out, network->depth - 1);
 }
 
 // Activation functions
@@ -76,4 +89,36 @@ double sigmoid(double x) {
 double derivative_sigmoid(double x) {
 	double sig = sigmoid(x);
 	return sig * (1 - sig);
+}
+
+void network_gradient_descent(Network* network, Vector* in, Vector* desiredOutput) {
+	Matrix* outputs = NULL;
+	network_feed0(network, in, &outputs);
+
+	double  epsilon				   = 1;
+	ActivationFunction *activation = network->functions + network->depth - 2;
+	Matrix* weight                 = network->weights + network->depth - 2;
+	Matrix* output   			   = outputs + (network->depth - 2);
+	Matrix* input   			   = outputs + (network->depth - 3);
+	Matrix* delta				   = NULL;
+
+	Matrix *desired = NULL;
+	IMatrix.init(desiredOutput->size, 1, desiredOutput->tab, &desired);
+	IMatrix.substract(output, desired, &delta);
+	for(size_t i = 1; i < network->depth; i++) {
+
+		IMatrix.apply(output, activation->derivative, &output);
+		IMatrix.mul(delta, epsilon, &delta);
+
+		Matrix *tmp = NULL, *tmp2 = NULL;
+		IMatrix.product(output, input, &tmp);
+		IMatrix.product(tmp, delta, &tmp2);
+		IMatrix.add(weight, tmp2, &weight);
+
+		IMatrix.destroy(tmp);
+		IMatrix.destroy(tmp2);
+
+		--output; --input;
+		--weight; --activation;
+	}
 }
