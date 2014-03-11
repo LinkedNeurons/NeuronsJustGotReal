@@ -1,5 +1,7 @@
 #include <CUnit/CUnit.h>
+#include <stdlib.h>
 #include <stdint.h>
+#include <stdio.h>
 
 #include "io/marshal.h"
 
