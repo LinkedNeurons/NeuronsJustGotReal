@@ -5,7 +5,16 @@
 #include "math/matrix.h"
 #include "math/vector.h"
 
-void feed(Network* network, Vector* input, Vector** output) {
+struct NetworkModule INetwork = {
+	.create = &network_create,
+	.feed   = &network_feed
+};
+
+Network* network_create(int depth, Matrix *weights, ActivationFunction *functions, Vector *biases) {
+	return NULL;
+}
+
+void network_feed(Network* network, Vector* input, Vector** output) {
 	Matrix* column                 = IMatrix.init(input->size, 1, input->tab);
 	Matrix* weights                = network->weights;
 	ActivationFunction *activation = network->functions;

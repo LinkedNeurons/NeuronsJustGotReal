@@ -19,6 +19,14 @@ typedef struct Network {
     Vector* biases;
 } Network;
 
-void feed(Network* network, Vector* input, Vector** output);
+Network* network_create(int depth, Matrix *weights, ActivationFunction *functions, Vector *biases);
+void network_feed(Network* network, Vector* input, Vector** output);
+
+struct NetworkModule {
+	Network* (*create)(int depth, Matrix*, ActivationFunction*, Vector*);
+	void (*feed)(Network*, Vector*, Vector**);
+};
+
+extern struct NetworkModule INetwork;
 
 #endif
