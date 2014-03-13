@@ -161,3 +161,22 @@ void matrix_test_equals() {
 	IMatrix.destroy(m2);
 	IMatrix.destroy(m3);
 }
+
+void matrix_test_repmat() {
+	Vector* v = IVector.init(3, (double[]) {1, 2, 3});
+	Matrix* result = IMatrix.init(6, 2, (double[]) {
+		1, 1,
+		2, 2,
+		3, 3,
+		1, 1,
+		2, 2,
+		3, 3
+	});
+
+	Matrix* rep = NULL;
+	IMatrix.repmat(v, 2, 2, &rep);
+	CU_ASSERT(IMatrix.equals(result, rep));
+
+	IMatrix.destroy(result);
+	IMatrix.destroy(rep);
+}

@@ -3,6 +3,7 @@
 #define _NETWORK_H_
 
 #include <stdlib.h>
+#include <math.h>
 #include "math/vector.h"
 #include "math/matrix.h"
 
@@ -10,6 +11,15 @@ typedef struct ActivationFunction {
 	double (*function)(double);
 	double (*derivative)(double);
 } ActivationFunction;
+
+double sigmoid(double x) {
+	return 1. / (1 + exp(-x));
+}
+
+double derivative_sigmoid(double x) {
+	double sig = sigmoid(x);
+	return sig * (1 - sig);
+}
 
 typedef struct Network {
 	int depth;
@@ -28,5 +38,11 @@ struct NetworkModule {
 };
 
 extern struct NetworkModule INetwork;
+
+struct FunctionModule {
+	ActivationFunction sigmoid;
+};
+
+extern struct FunctionModule ActivationFunctions;
 
 #endif

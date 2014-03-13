@@ -13,7 +13,8 @@ struct MatrixModule IMatrix = {
 	.substract = &matrix_substract,
 	.vectorize = &matrix_vectorize,
 	.apply     = &matrix_apply,
-	.equals    = &matrix_equals
+	.equals    = &matrix_equals,
+	.repmat    = &matrix_repmat
 };
 
 Matrix* matrix_create(size_t rows, size_t columns) {
@@ -164,4 +165,21 @@ int matrix_equals(Matrix *m1, Matrix *m2) {
 		}
 	}
 	return equals;
+}
+
+void matrix_repmat(Vector* v, size_t rows, size_t cols, Matrix** result) {
+	size_t rowsize = cols * v->size;
+	size_t length = rows * rowsize;
+	double *data = malloc(sizeof(double) * length);
+	for (size_t i = 0; i < length; ++i) {
+		data[i] = IVector.at(v, (i % rowsize) / cols);
+	}
+	if (*result) {
+		(*result)->rows = rows * v->size;
+		(*result)->cols = cols;
+		free((*result)->arr);
+		(*result)->arr  = data;
+	} else {
+		*result = matrix_init(rows * v->size, cols, data);
+	}
 }
