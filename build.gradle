@@ -33,6 +33,17 @@ executables {
 			linker.args '-lcunit'
 		}
 	}
+	samples {
+		binaries.all {
+			cCompiler.args '-I', "/usr/local/include"
+		}
+	}
+	sample_2048 {
+		binaries.all {
+			cCompiler.args '-I', "/usr/local/include"
+			linker.args '-lSDL'
+		}
+	}
 	sample_graphics {
 		binaries.all {
 			cCompiler.args '-I', "/usr/local/include"
@@ -69,6 +80,22 @@ sources {
 		c {
 			lib libraries.njgr
 			lib libraries.njgr_graphics
+			source {
+				include "**/*.c"
+			}
+		}
+	}
+	samples {
+		c {
+			lib libraries.njgr
+			source {
+				include "**/*.c"
+			}
+		}
+	}
+	sample_2048 {
+		c {
+			lib libraries.njgr
 			source {
 				include "**/*.c"
 			}
@@ -112,6 +139,17 @@ task runTests(type:Exec) {
 	dependsOn release_build
 	workingDir './build/install/testExecutable/release'
 	commandLine './test'
+}
+
+task copyAssetsFor2048(type: Copy) {
+	from 'assets/samples_2048/'
+	into 'build/install/sample_2048Executable/assets/'
+}
+
+task run2048(type:Exec) {
+	dependsOn copyAssetsFor2048
+	workingDir './build/install/sample_2048Executable/'
+	commandLine './sample_2048'
 }
 
 afterEvaluate {
