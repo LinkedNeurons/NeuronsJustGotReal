@@ -4,7 +4,8 @@
 
 void vector_test_init() {
 	size_t size = 4;
-	Vector *v = vector_init(size, (double[]) {1, 2, 3, 4});
+	Vector *v = NULL;
+	vector_init(size, (double[]) {1, 2, 3, 4}, &v);
 	
 	CU_TEST_FATAL(v->size == size);
 	for(size_t i = 0; i < size; ++i) {
@@ -24,7 +25,8 @@ void vector_test_create() {
 
 void vector_test_clone() {
 	size_t size = 4;
-	Vector *v = vector_init(size, (double[]) {1, 2, 3, 4});
+	Vector *v = NULL;
+	IVector.init(size, (double[]) {1, 2, 3, 4}, &v);
 
 	Vector *vc = vector_clone(v);
 	CU_TEST_FATAL(vc->size == v->size);

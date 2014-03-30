@@ -4,6 +4,7 @@
 struct MatrixModule IMatrix = {
 	.create    = &matrix_create,
 	.init      = &matrix_init,
+	.initf     = &matrix_initf,
 	.destroy   = &matrix_destroy,
 	.get       = &matrix_get,
 	.set       = &matrix_set,
@@ -13,38 +14,59 @@ struct MatrixModule IMatrix = {
 	.substract = &matrix_substract,
 	.vectorize = &matrix_vectorize,
 	.apply     = &matrix_apply,
-	.equals    = &matrix_equals
+	.equals    = &matrix_equals,
+	.repmat    = &matrix_repmat
 };
 
-Matrix* matrix_create(size_t rows, size_t columns) {
+void matrix_create(size_t rows, size_t columns, Matrix** out) {
 	if (!rows || !columns) {
 		errno = EINVAL;
-		return NULL;
+		return;
 	}
-	Matrix *matrix = malloc(sizeof(Matrix));
-		matrix->arr  = calloc(rows * columns, sizeof(double));
-		matrix->rows = rows;
-		matrix->cols = columns;
-	return matrix;
+	if (!*out) {
+		*out = malloc(sizeof(Matrix));
+	}
+	(*out)->arr  = calloc(rows * columns, sizeof(double));
+	(*out)->rows = rows;
+	(*out)->cols = columns;
 }
 
-Matrix* matrix_init(size_t rows, size_t columns, const double* values) {
+void matrix_init(size_t rows, size_t columns, const double* values, Matrix** out) {
 	if (!rows || !columns) {
 		errno = EINVAL;
-		return NULL;
+		return;
 	}
-	Matrix *matrix = malloc(sizeof(Matrix));
-		matrix->arr  = malloc(rows * columns * sizeof(double));
-		matrix->rows = rows;
-		matrix->cols = columns;
+	if (!*out) {
+		*out = malloc(sizeof(Matrix));
+	}
+	(*out)->arr  = malloc(rows * columns * sizeof(double));
+	(*out)->rows = rows;
+	(*out)->cols = columns;
 
-	for (size_t i = 0; i < matrix->rows; ++i) {
-		for (size_t j = 0; j < matrix->cols; ++j) {
-			matrix_set(matrix, i, j, values[j + matrix->cols * i]);
+	for (size_t i = 0; i < (*out)->rows; ++i) {
+		for (size_t j = 0; j < (*out)->cols; ++j) {
+			matrix_set(*out, i, j, values[j + (*out)->cols * i]);
 		}
 	}
+}
 
-	return matrix;
+void matrix_initf(size_t rows, size_t columns, double (*f)(size_t, size_t), Matrix** out) {
+	if (!rows || !columns) {
+		errno = EINVAL;
+		return;
+	}
+	if (!*out) {
+		*out = malloc(sizeof(Matrix));
+	}
+	(*out)->arr  = malloc(rows * columns * sizeof(double));
+	(*out)->rows = rows;
+	(*out)->cols = columns;
+
+	for (size_t i = 0; i < (*out)->rows; ++i) {
+		for (size_t j = 0; j < (*out)->cols; ++j) {
+			matrix_set(*out, i, j, f(i, j));
+		}
+	}
 }
 
 void matrix_destroy(Matrix* matrix) {
@@ -134,12 +156,12 @@ void matrix_substract(Matrix *m1, Matrix *m2, Matrix **result) {
 }
 
 void matrix_vectorize(Matrix* m, Vector** v) {
-	if (!((m->cols == 1) ^ (m->rows == 1))) {
+	if (!((m->cols == 1) || (m->rows == 1))) {
 		errno = EDOM;
 		return;
 	}
 
-	*v = IVector.init(m->cols == 1 ? m->rows : m->cols, m->arr);
+	IVector.init(m->cols == 1 ? m->rows : m->cols, m->arr, v);
 }
 
 void matrix_apply(Matrix* matrix, double (*f)(double), Matrix** result) {
@@ -164,4 +186,21 @@ int matrix_equals(Matrix *m1, Matrix *m2) {
 		}
 	}
 	return equals;
+}
+
+void matrix_repmat(Vector* v, size_t rows, size_t cols, Matrix** result) {
+	size_t rowsize = cols * v->size;
+	size_t length = rows * rowsize;
+	double *data = malloc(sizeof(double) * length);
+	for (size_t i = 0; i < length; ++i) {
+		data[i] = IVector.at(v, (i % rowsize) / cols);
+	}
+	if (*result) {
+		(*result)->rows = rows * v->size;
+		(*result)->cols = cols;
+		free((*result)->arr);
+		(*result)->arr  = data;
+	} else {
+		matrix_init(rows * v->size, cols, data, result);
+	}
 }

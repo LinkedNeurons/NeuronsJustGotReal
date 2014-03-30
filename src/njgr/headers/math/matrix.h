@@ -9,8 +9,9 @@ typedef struct Matrix {
 	size_t rows, cols;
 } Matrix;
 
-Matrix* matrix_create(size_t, size_t);
-Matrix* matrix_init(size_t, size_t, const double*);
+void matrix_create(size_t, size_t, Matrix**);
+void matrix_init(size_t, size_t, const double*, Matrix**);
+void matrix_initf(size_t, size_t, double (*f)(size_t, size_t), Matrix**);
 void matrix_destroy(Matrix*);
 
 double matrix_get(Matrix*, size_t, size_t);
@@ -24,11 +25,13 @@ void matrix_vectorize(Matrix*, Vector**);
 int matrix_equals(Matrix*, Matrix*);
 
 void matrix_apply(Matrix*, double (*f)(double), Matrix**);
+void matrix_repmat(Vector*, size_t, size_t, Matrix**);
 
 /* Module */
 struct MatrixModule {
-	Matrix* (*create)(size_t, size_t);
-	Matrix* (*init)(size_t, size_t, const double*);
+	void (*create)(size_t, size_t, Matrix**);
+	void (*init)(size_t, size_t, const double*, Matrix**);
+	void (*initf)(size_t, size_t, double (*f)(size_t, size_t), Matrix**);
 	void (*destroy)(Matrix*);
 	double (*get)(Matrix*, size_t, size_t);
 	void (*set)(Matrix*, size_t, size_t, double);
@@ -39,6 +42,7 @@ struct MatrixModule {
 	void (*vectorize)(Matrix*, Vector**);
 	void (*apply)(Matrix*, double (*)(double), Matrix**);
 	int (*equals)(Matrix*, Matrix*);
+	void (*repmat)(Vector*, size_t, size_t, Matrix**);
 };
 
 extern struct MatrixModule IMatrix;

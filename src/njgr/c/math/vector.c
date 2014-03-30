@@ -6,6 +6,7 @@
 
 struct VectorModule IVector = {
 	.init   = &vector_init,
+	.initf  = &vector_initf,
 	.create = &vector_create,
 	.clone  = &vector_clone,
 	.at     = &vector_at,
@@ -13,14 +14,24 @@ struct VectorModule IVector = {
 	.foldl  = &vector_foldl
 };
 
-Vector *vector_init(size_t size, double *tab) {
-	Vector *v = malloc(sizeof(Vector));
-	v->tab    = malloc(size * sizeof(double));
-	v->size   = size;
+void vector_init(size_t size, double *tab, Vector** out) {
+	if (!*out) {
+		*out = malloc(sizeof(Vector));
+	}
+	(*out)->tab    = malloc(size * sizeof(double));
+	(*out)->size   = size;
 
-	for(size_t i = 0; i < size; ++i) { v->tab[i] = tab[i]; }
+	for(size_t i = 0; i < size; ++i) { (*out)->tab[i] = tab[i]; }
+}
 
-	return v;
+void vector_initf(size_t size, double (*f)(size_t), Vector** out) {
+	if (!*out) {
+		*out = malloc(sizeof(Vector));
+	}
+	(*out)->tab    = malloc(size * sizeof(double));
+	(*out)->size   = size;
+
+	for(size_t i = 0; i < size; ++i) { (*out)->tab[i] = f(i); }
 }
 
 Vector *vector_create(size_t size) {
