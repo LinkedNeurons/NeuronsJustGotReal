@@ -3,6 +3,8 @@
 
 #include "math/test_matrix.h"
 #include "math/test_vector.h"
+#include "network/test_factory.h"
+#include "network/test_network.h"
 
 
 int main() {
@@ -12,7 +14,9 @@ int main() {
 
     int success = 1
         && add_matrix_tests() 
-        && add_vector_tests();
+        && add_vector_tests()
+        && add_factory_tests()
+        && add_network_tests();
     
     if (success) {
         CU_basic_set_mode(CU_BRM_VERBOSE);
