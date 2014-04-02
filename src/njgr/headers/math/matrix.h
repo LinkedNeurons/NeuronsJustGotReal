@@ -27,6 +27,8 @@ int matrix_equals(Matrix*, Matrix*);
 
 void matrix_apply(Matrix*, double (*f)(double), Matrix**);
 void matrix_repmat(Vector*, size_t, size_t, Matrix**);
+void matrix_member_product(Matrix*, Matrix*, Matrix**);
+
 
 /* Module */
 struct MatrixModule {
@@ -45,6 +47,7 @@ struct MatrixModule {
 	void (*apply)(Matrix*, double (*)(double), Matrix**);
 	int (*equals)(Matrix*, Matrix*);
 	void (*repmat)(Vector*, size_t, size_t, Matrix**);
+	void (*member_product)(Matrix*, Matrix*, Matrix**);
 };
 
 extern struct MatrixModule IMatrix;

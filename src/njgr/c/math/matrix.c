@@ -2,21 +2,22 @@
 #include "math/matrix.h"
 
 struct MatrixModule IMatrix = {
-	.create        = &matrix_create,
-	.init          = &matrix_init,
-	.initf         = &matrix_initf,
-	.destroy       = &matrix_destroy,
-	.destroy_array = &matrix_destroy_array,
-	.get           = &matrix_get,
-	.set           = &matrix_set,
-	.product       = &matrix_product,
-	.mul           = &matrix_mul,
-	.add           = &matrix_add,
-	.substract     = &matrix_substract,
-	.vectorize     = &matrix_vectorize,
-	.apply         = &matrix_apply,
-	.equals        = &matrix_equals,
-	.repmat        = &matrix_repmat
+	.create         = &matrix_create,
+	.init           = &matrix_init,
+	.initf          = &matrix_initf,
+	.destroy        = &matrix_destroy,
+	.destroy_array  = &matrix_destroy_array,
+	.get            = &matrix_get,
+	.set            = &matrix_set,
+	.product        = &matrix_product,
+	.mul            = &matrix_mul,
+	.add            = &matrix_add,
+	.substract      = &matrix_substract,
+	.vectorize      = &matrix_vectorize,
+	.apply          = &matrix_apply,
+	.equals         = &matrix_equals,
+	.repmat         = &matrix_repmat,
+	.member_product = &matrix_member_product
 };
 
 void matrix_create(size_t rows, size_t columns, Matrix** out) {
@@ -162,6 +163,26 @@ void matrix_substract(Matrix *m1, Matrix *m2, Matrix **result) {
 		}
 	}
 }
+
+void matrix_member_product(Matrix *m1, Matrix *m2, Matrix **result) {
+	if (!*result) {
+		if (m1->cols != m2->cols || m1->rows != m2->rows) {
+			errno = EDOM;
+			return;
+		}
+
+		*result = malloc(sizeof(Matrix));
+		(*result)->rows = m1->rows;
+		(*result)->cols = m1->cols;
+		(*result)->arr  = malloc((*result)->rows * (*result)->cols * sizeof(double));
+	}
+	for (size_t i = 0; i < m1->rows; ++i) {
+		for (size_t j = 0; j < m1->cols; ++j) {
+			matrix_set(*result, i, j, matrix_get(m1, i, j) * matrix_get(m2, i, j));
+		}
+	}
+}
+
 
 void matrix_vectorize(Matrix* m, Vector** v) {
 	if (!((m->cols == 1) || (m->rows == 1))) {
