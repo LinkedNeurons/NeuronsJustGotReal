@@ -17,7 +17,8 @@ struct MatrixModule IMatrix = {
 	.apply          = &matrix_apply,
 	.equals         = &matrix_equals,
 	.repmat         = &matrix_repmat,
-	.member_product = &matrix_member_product
+	.member_product = &matrix_member_product,
+	.transpose      = &matrix_transpose
 };
 
 void matrix_create(size_t rows, size_t columns, Matrix** out) {
@@ -183,6 +184,24 @@ void matrix_member_product(Matrix *m1, Matrix *m2, Matrix **result) {
 	}
 }
 
+void matrix_transpose(Matrix *m, Matrix **result) {
+	if (!*result) {
+		*result = malloc(sizeof(Matrix));
+		(*result)->rows = m->rows;
+		(*result)->cols = m->cols;
+		(*result)->arr  = malloc((*result)->rows * (*result)->cols * sizeof(double));
+	} else {
+		if ((*result)->cols != m->cols || (*result)->rows != m->rows) {
+			errno = EDOM;
+			return;
+		}
+	}
+	for (size_t i = 0; i < m->rows; ++i) {
+		for (size_t j = 0; j < m->cols; ++j) {
+			matrix_set(*result, j, i, matrix_get(m, i, j));
+		}
+	}
+}
 
 void matrix_vectorize(Matrix* m, Vector** v) {
 	if (!((m->cols == 1) || (m->rows == 1))) {
