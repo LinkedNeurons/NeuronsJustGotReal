@@ -166,12 +166,13 @@ void matrix_substract(Matrix *m1, Matrix *m2, Matrix **result) {
 }
 
 void matrix_member_product(Matrix *m1, Matrix *m2, Matrix **result) {
-	if (!*result) {
-		if (m1->cols != m2->cols || m1->rows != m2->rows) {
-			errno = EDOM;
-			return;
-		}
+	
+	if (m1->cols != m2->cols || m1->rows != m2->rows) {
+		errno = EDOM;
+		return;
+	}
 
+	if (!*result) {
 		*result = malloc(sizeof(Matrix));
 		(*result)->rows = m1->rows;
 		(*result)->cols = m1->cols;
@@ -185,6 +186,12 @@ void matrix_member_product(Matrix *m1, Matrix *m2, Matrix **result) {
 }
 
 void matrix_transpose(Matrix *m, Matrix **result) {
+	
+	if (m->cols != m->rows) {
+		errno = EDOM;
+		return;
+	}
+
 	if (!*result) {
 		*result = malloc(sizeof(Matrix));
 		(*result)->rows = m->rows;

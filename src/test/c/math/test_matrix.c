@@ -226,3 +226,30 @@ Matrix *m1 = NULL;
 	IMatrix.destroy(result);
 }
 
+void matrix_test_transpose(){
+	Matrix *matrix = NULL;
+	IMatrix.init(3, 3, (double[]) {
+	   1, 2, 3,
+	   4, 5, 6,
+	   7, 8, 9
+	}, &matrix);
+
+	Matrix *result = NULL;
+	IMatrix.transpose(matrix, &result);
+	
+	CU_ASSERT(1 == IMatrix.get(result, 0, 0));
+	CU_ASSERT(4 == IMatrix.get(result, 0, 1));
+	CU_ASSERT(7 == IMatrix.get(result, 0, 2));
+
+	CU_ASSERT(2 == IMatrix.get(result, 1, 0));
+	CU_ASSERT(5 == IMatrix.get(result, 1, 1));
+	CU_ASSERT(8 == IMatrix.get(result, 1, 2));
+
+	CU_ASSERT(3 == IMatrix.get(result, 2, 0));
+	CU_ASSERT(6 == IMatrix.get(result, 2, 1));
+	CU_ASSERT(9 == IMatrix.get(result, 2, 2));
+
+	IMatrix.destroy(matrix);
+	IMatrix.destroy(result);
+
+}
