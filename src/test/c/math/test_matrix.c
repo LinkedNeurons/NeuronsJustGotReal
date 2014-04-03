@@ -147,6 +147,7 @@ void matrix_test_add() {
 
 	IMatrix.destroy(m1);
 	IMatrix.destroy(m2);
+	IMatrix.destroy(result);
 }
 
 void matrix_test_equals() {
@@ -196,3 +197,32 @@ void matrix_test_repmat() {
 	IMatrix.destroy(result);
 	IMatrix.destroy(rep);
 }
+
+void matrix_test_member_product() {
+Matrix *m1 = NULL;
+	IMatrix.init(2, 3, (double[]) {
+	   1, 2, 3,
+	   4, 5, 6
+	}, &m1);
+	Matrix *m2 = NULL;
+	IMatrix.init(2, 3, (double[]) {
+	   7, 8, 9,
+	   1, 2, 3
+	}, &m2);
+
+	Matrix *result = NULL;
+	IMatrix.member_product(m1, m2, &result);
+
+	CU_ASSERT(7  == IMatrix.get(result, 0, 0));
+	CU_ASSERT(16 == IMatrix.get(result, 0, 1));
+	CU_ASSERT(27 == IMatrix.get(result, 0, 2));
+	
+	CU_ASSERT(4  == IMatrix.get(result, 1, 0));
+	CU_ASSERT(10 == IMatrix.get(result, 1, 1));
+	CU_ASSERT(18 == IMatrix.get(result, 1, 2));
+
+	IMatrix.destroy(m1);
+	IMatrix.destroy(m2);
+	IMatrix.destroy(result);
+}
+
