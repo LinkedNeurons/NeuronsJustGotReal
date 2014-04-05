@@ -26,6 +26,11 @@ executables {
             cCompiler.args '-I', "/usr/local/include"
         }
     }
+    display {
+        binaries.all {
+            cCompiler.args '-I', "/usr/local/include"
+        }
+    }
 }
 
 sources {
@@ -44,6 +49,13 @@ sources {
             }
         }
     }
+	display {
+		c {
+			source {
+				include "**/*.c"
+			}
+		}
+	}
 }
 
 model {
@@ -67,6 +79,10 @@ task injectLibs << {
             toolChain.linker.withArguments { args ->
                 if (!args.contains("-lcunit")) {
                     args << "-lcunit"
+                }
+                if (!args.contains("-lSDL")) {
+                    args << "-lSDL"
+                    args << "-lSDL_draw"
                 }
             }
         }
