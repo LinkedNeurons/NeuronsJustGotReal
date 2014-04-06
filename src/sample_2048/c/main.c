@@ -3,6 +3,7 @@
 #include <math.h>
 
 #include <SDL/SDL.h>
+#include <SDL/SDL_image.h>
 
 #define WIDTH  700
 #define HEIGHT 700
@@ -10,40 +11,43 @@
 
 typedef struct {
 	SDL_Surface *display;
-	SDL_Surface *grid, tile;
+	SDL_Surface *grid, *tile;
 } Assets;
+
 
 Assets *ass = NULL; 
 
-SDL_Surface *init() {
+void init() {
 
 	ass = malloc(sizeof(Assets));
 
 	SDL_Init(SDL_INIT_VIDEO);
 	ass->display = SDL_SetVideoMode(WIDTH, HEIGHT, COLORS, SDL_HWSURFACE);
+	ass->grid = IMG_Load("assets/grid.png");
+	ass->tile = IMG_Load("assets/tile.png");
 	
 
-	SDL_FillRect(display, NULL, SDL_MapRGB(display->format, 44, 62, 80));
-	SDL_Flip(display);
+	SDL_FillRect(ass->display, NULL, SDL_MapRGB(ass->display->format, 44, 62, 80));
+	SDL_Flip(ass->display);
 
 	SDL_WM_SetCaption("2048 Sample", NULL);
-
-
-	return display;
 }
 
 
-void draw(SDL_Surface *display) {
+void draw() {
 
-	SDL_Flip(display);
+	SDL_Flip(ass->display);
 }
 
 void update() {
 
 }
 
-void destroy(SDL_Surface *display) {
-	SDL_FreeSurface(display);
+void destroy() {
+	SDL_FreeSurface(ass->display);
+	SDL_FreeSurface(ass->grid);
+	SDL_FreeSurface(ass->tile);
+	free(ass);
 	SDL_Quit();
 }
 
@@ -67,12 +71,12 @@ void catchKillEvent(int *killed) {
 
 int main(int argc, char *argv) {
 	printf("\n\n \t2048 Sample logs \n\n");
-	SDL_Surface *display = init();
+	init();
 
 	int killed = 0;
 	while(!killed) {
 		catchKillEvent(&killed);
-		draw(display);
+		draw();
 		update();
 	}
 
