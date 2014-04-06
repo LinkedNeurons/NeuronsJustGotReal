@@ -198,8 +198,8 @@ void matrix_test_repmat() {
 	IMatrix.destroy(rep);
 }
 
-void matrix_test_member_product() {
-Matrix *m1 = NULL;
+void matrix_test_hadamard() {
+	Matrix *m1 = NULL;
 	IMatrix.init(2, 3, (double[]) {
 	   1, 2, 3,
 	   4, 5, 6
@@ -211,7 +211,7 @@ Matrix *m1 = NULL;
 	}, &m2);
 
 	Matrix *result = NULL;
-	IMatrix.member_product(m1, m2, &result);
+	IMatrix.hadamard(m1, m2, &result);
 
 	CU_ASSERT(7  == IMatrix.get(result, 0, 0));
 	CU_ASSERT(16 == IMatrix.get(result, 0, 1));
@@ -251,5 +251,4 @@ void matrix_test_transpose(){
 
 	IMatrix.destroy(matrix);
 	IMatrix.destroy(result);
-
 }

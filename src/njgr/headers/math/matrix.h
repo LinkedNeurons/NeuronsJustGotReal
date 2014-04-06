@@ -3,8 +3,10 @@
 
 #include <stdlib.h>
 #include "math/vector.h"
+#include "util/swissknife.h"
 
-typedef struct Matrix {
+typedef struct {
+	void* self;
 	double* arr;
 	size_t rows, cols;
 } Matrix;
@@ -15,6 +17,8 @@ void matrix_initf(size_t, size_t, double (*f)(size_t, size_t), Matrix**);
 void matrix_destroy(Matrix*);
 void matrix_destroy_array(Matrix*, size_t);
 
+bool matrix_is_valid(Matrix *matrix);
+
 double matrix_get(Matrix*, size_t, size_t);
 void matrix_set(Matrix*, size_t, size_t, double);
 
@@ -23,11 +27,11 @@ void matrix_mul(Matrix*, double, Matrix**);
 void matrix_add(Matrix*, Matrix*, Matrix**);
 void matrix_substract(Matrix*, Matrix*, Matrix**);
 void matrix_vectorize(Matrix*, Vector**);
-int matrix_equals(Matrix*, Matrix*);
+bool matrix_equals(Matrix*, Matrix*);
 
 void matrix_apply(Matrix*, double (*f)(double), Matrix**);
 void matrix_repmat(Vector*, size_t, size_t, Matrix**);
-void matrix_member_product(Matrix*, Matrix*, Matrix**);
+void matrix_hadamard(Matrix*, Matrix*, Matrix**);
 void matrix_transpose(Matrix*, Matrix**);
 
 
@@ -46,9 +50,9 @@ struct MatrixModule {
 	void (*substract)(Matrix*, Matrix*, Matrix**);
 	void (*vectorize)(Matrix*, Vector**);
 	void (*apply)(Matrix*, double (*)(double), Matrix**);
-	int (*equals)(Matrix*, Matrix*);
+	bool (*equals)(Matrix*, Matrix*);
 	void (*repmat)(Vector*, size_t, size_t, Matrix**);
-	void (*member_product)(Matrix*, Matrix*, Matrix**);
+	void (*hadamard)(Matrix*, Matrix*, Matrix**);
 	void (*transpose)(Matrix*, Matrix**);
 };
 

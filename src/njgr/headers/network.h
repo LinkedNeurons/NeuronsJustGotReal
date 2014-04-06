@@ -31,7 +31,7 @@ typedef struct Network {
 
 Network* network_create(size_t depth, Matrix *weights, ActivationFunction *functions, Vector *biases);
 void network_destroy(Network *network);
-void network_feed0(Network* network, Vector* input, Matrix** output);
+void network_feed0(Network* network, Vector* input, Matrix** output, Matrix** activations);
 void network_feed(Network* network, Vector* input, Vector** output);
 void network_gradient_descent(Network* network, Vector* input, Vector* desiredOutput);
 
