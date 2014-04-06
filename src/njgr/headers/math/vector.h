@@ -11,6 +11,8 @@ typedef struct Vector {
 void vector_init  (size_t capacity, double *tab, Vector**);
 void vector_initf (size_t capacity, double (*f)(size_t), Vector**);
 Vector *vector_create(size_t size);
+void vector_destroy(Vector *v);
+void vector_destroy_array(Vector *array, size_t size);
 Vector *vector_clone (Vector* v);
 
 double vector_at    (Vector *v, size_t i);
@@ -23,6 +25,8 @@ struct VectorModule {
 	void    (*init)(size_t, double*, Vector**);
 	void    (*initf)(size_t, double (*f)(size_t), Vector**);
 	Vector* (*create)(size_t);
+	void    (*destroy)(Vector*);
+	void    (*destroy_array)(Vector*, size_t);
 	Vector* (*clone)(Vector*);
 	double  (*at)(Vector*, size_t);
 	double  (*foldl)(Vector*, double (*)(double, double), double);

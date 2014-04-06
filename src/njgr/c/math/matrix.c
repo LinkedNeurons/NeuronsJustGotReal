@@ -2,20 +2,21 @@
 #include "math/matrix.h"
 
 struct MatrixModule IMatrix = {
-	.create    = &matrix_create,
-	.init      = &matrix_init,
-	.initf     = &matrix_initf,
-	.destroy   = &matrix_destroy,
-	.get       = &matrix_get,
-	.set       = &matrix_set,
-	.product   = &matrix_product,
-	.mul       = &matrix_mul,
-	.add       = &matrix_add,
-	.substract = &matrix_substract,
-	.vectorize = &matrix_vectorize,
-	.apply     = &matrix_apply,
-	.equals    = &matrix_equals,
-	.repmat    = &matrix_repmat
+	.create        = &matrix_create,
+	.init          = &matrix_init,
+	.initf         = &matrix_initf,
+	.destroy       = &matrix_destroy,
+	.destroy_array = &matrix_destroy_array,
+	.get           = &matrix_get,
+	.set           = &matrix_set,
+	.product       = &matrix_product,
+	.mul           = &matrix_mul,
+	.add           = &matrix_add,
+	.substract     = &matrix_substract,
+	.vectorize     = &matrix_vectorize,
+	.apply         = &matrix_apply,
+	.equals        = &matrix_equals,
+	.repmat        = &matrix_repmat
 };
 
 void matrix_create(size_t rows, size_t columns, Matrix** out) {
@@ -71,6 +72,13 @@ void matrix_initf(size_t rows, size_t columns, double (*f)(size_t, size_t), Matr
 
 void matrix_destroy(Matrix* matrix) {
 	free(matrix->arr);
+	free(matrix);
+}
+
+void matrix_destroy_array(Matrix* matrix, size_t size) {
+	for (size_t i = 0; i < size; ++i) {
+		free(matrix[i].arr);
+	}
 	free(matrix);
 }
 

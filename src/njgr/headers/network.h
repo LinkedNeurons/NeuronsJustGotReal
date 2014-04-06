@@ -30,10 +30,12 @@ typedef struct Network {
 } Network;
 
 Network* network_create(size_t depth, Matrix *weights, ActivationFunction *functions, Vector *biases);
+void network_destroy(Network *network);
 void network_feed(Network* network, Vector* input, Vector** output);
 
 struct NetworkModule {
 	Network* (*create)(size_t, Matrix*, ActivationFunction*, Vector*);
+	void (*destroy)(Network*);
 	void (*feed)(Network*, Vector*, Vector**);
 };
 

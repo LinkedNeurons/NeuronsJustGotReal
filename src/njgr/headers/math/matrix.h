@@ -13,6 +13,7 @@ void matrix_create(size_t, size_t, Matrix**);
 void matrix_init(size_t, size_t, const double*, Matrix**);
 void matrix_initf(size_t, size_t, double (*f)(size_t, size_t), Matrix**);
 void matrix_destroy(Matrix*);
+void matrix_destroy_array(Matrix*, size_t);
 
 double matrix_get(Matrix*, size_t, size_t);
 void matrix_set(Matrix*, size_t, size_t, double);
@@ -33,6 +34,7 @@ struct MatrixModule {
 	void (*init)(size_t, size_t, const double*, Matrix**);
 	void (*initf)(size_t, size_t, double (*f)(size_t, size_t), Matrix**);
 	void (*destroy)(Matrix*);
+	void (*destroy_array)(Matrix*, size_t);
 	double (*get)(Matrix*, size_t, size_t);
 	void (*set)(Matrix*, size_t, size_t, double);
 	void (*product)(Matrix*, Matrix*, Matrix**);

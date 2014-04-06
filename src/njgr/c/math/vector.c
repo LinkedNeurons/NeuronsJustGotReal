@@ -5,14 +5,16 @@
 #include "math/vector.h"
 
 struct VectorModule IVector = {
-	.init   = &vector_init,
-	.initf  = &vector_initf,
-	.create = &vector_create,
-	.clone  = &vector_clone,
-	.at     = &vector_at,
-	.foldr  = &vector_foldr,
-	.foldl  = &vector_foldl,
-	.equals = &vector_equals
+	.init          = &vector_init,
+	.initf         = &vector_initf,
+	.create        = &vector_create,
+	.destroy       = &vector_destroy,
+	.destroy_array = &vector_destroy_array,
+	.clone         = &vector_clone,
+	.at            = &vector_at,
+	.foldr         = &vector_foldr,
+	.foldl         = &vector_foldl,
+	.equals        = &vector_equals
 };
 
 void vector_init(size_t size, double *tab, Vector** out) {
@@ -43,6 +45,18 @@ Vector *vector_create(size_t size) {
 	for(size_t i = 0; i < size; ++i) { v->tab[i] = 0; }
 
 	return v;
+}
+
+void vector_destroy(Vector *v) {
+	free(v->tab);
+	free(v);
+}
+
+void vector_destroy_array(Vector *array, size_t size) {
+	for (size_t i = 0; i < size; ++i) {
+		free(array[i].tab);
+	}
+	free(array);
 }
 
 Vector *vector_clone(Vector *v) {
