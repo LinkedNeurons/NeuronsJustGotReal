@@ -6,7 +6,7 @@
 #include "io/marshal.h"
 
 void test_marshal_basic() {
-	FILE *file = fopen("test", "w+");
+	FILE *file = fopen("marshal_test", "w+");
 
 	char *str = "hello world";
 	double arr[] = {1,2,3,4,5};
@@ -39,8 +39,11 @@ void test_marshal_math() {
 	}, &m);
 
 	Vector *v = NULL, *readv = NULL;
+	IVector.init(2, (double[]) {
+		7, 8
+	}, &v);
 
-	FILE *file = fopen("test", "w+");
+	FILE *file = fopen("marshal_test", "w+");
 
 	marshal_write_matrix(file, m);
 	marshal_write_vector(file, v);

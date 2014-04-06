@@ -14,7 +14,8 @@ void marshal_write_string(FILE *stream, char *buffer) {
 }
 
 void marshal_write_matrix(FILE *stream, Matrix *matrix) {
-	fwrite((size_t[]) { matrix->rows, matrix->cols }, sizeof(size_t), 2, stream);
+	fwrite(&(matrix->rows), sizeof(size_t), 1, stream);
+	fwrite(&(matrix->cols), sizeof(size_t), 1, stream);
 	fwrite(matrix->arr, sizeof(double), matrix->rows * matrix->cols, stream);
 }
 
@@ -39,8 +40,8 @@ void marshal_read_string(FILE *stream, char **buffer) {
 void marshal_read_matrix(FILE *stream, Matrix **matrix) {
 	size_t rows = 0, cols = 0;
 	size_t read = 0;
-	read += fread(&cols, sizeof(size_t), 1, stream);
 	read += fread(&rows, sizeof(size_t), 1, stream);
+	read += fread(&cols, sizeof(size_t), 1, stream);
 	if (read != 2) return;
 
 	double *buffer = malloc(rows * cols * sizeof(double));
@@ -61,7 +62,7 @@ void marshal_read_vector(FILE *stream, Vector **vector) {
 	double *buffer = NULL;
 	marshal_read_array(stream, (void**) &buffer, &length);
 	new_struct(*vector, Vector) {
-		.size = length,
+		.size = length / sizeof(double),
 		.tab  = buffer
 	};
 }
