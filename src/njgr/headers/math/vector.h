@@ -17,15 +17,17 @@ double vector_at    (Vector *v, size_t i);
 
 double vector_foldl(Vector *v, double (*f)(double, double), double element);
 double vector_foldr(Vector *v, double (*f)(double, double), double element);
+int vector_equals(Vector *v1, Vector *v2);
 
 struct VectorModule {
-	void (*init)(size_t, double*, Vector**);
-	void (*initf)(size_t, double (*f)(size_t), Vector**);
+	void    (*init)(size_t, double*, Vector**);
+	void    (*initf)(size_t, double (*f)(size_t), Vector**);
 	Vector* (*create)(size_t);
 	Vector* (*clone)(Vector*);
-	double (*at)(Vector*, size_t);
-	double (*foldl)(Vector*, double (*)(double, double), double);
-	double (*foldr)(Vector*, double (*)(double, double), double);
+	double  (*at)(Vector*, size_t);
+	double  (*foldl)(Vector*, double (*)(double, double), double);
+	double  (*foldr)(Vector*, double (*)(double, double), double);
+	int     (*equals)(Vector*, Vector*);
 };
 
 extern struct VectorModule IVector;

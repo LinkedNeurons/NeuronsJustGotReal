@@ -23,6 +23,23 @@ void vector_test_create() {
 	}
 }
 
+void vector_test_equals() {
+	size_t size = 4;
+	Vector *v1 = NULL, *v2 = NULL, *v3 = NULL, *v4 = NULL;
+	vector_init(size, (double[]) {1, 2, 3, 4}, &v1);
+	vector_init(size, (double[]) {1, 2, 3, 4}, &v2);
+	vector_init(size, (double[]) {4, 3, 2, 1}, &v3);
+	vector_init(size + 1, (double[]) {1, 2, 3, 4, 5}, &v4);
+	
+	CU_TEST_FATAL(v1->size == v2->size);
+	CU_TEST_FATAL(v2->size == v3->size);
+	CU_TEST_FATAL(v1->size != v4->size);
+
+	CU_TEST_FATAL(IVector.equals(v1, v2) == 1);
+	CU_TEST_FATAL(IVector.equals(v1, v3) == 0);
+}
+
+
 void vector_test_clone() {
 	size_t size = 4;
 	Vector *v = NULL;

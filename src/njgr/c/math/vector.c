@@ -11,7 +11,8 @@ struct VectorModule IVector = {
 	.clone  = &vector_clone,
 	.at     = &vector_at,
 	.foldr  = &vector_foldr,
-	.foldl  = &vector_foldl
+	.foldl  = &vector_foldl,
+	.equals = &vector_equals
 };
 
 void vector_init(size_t size, double *tab, Vector** out) {
@@ -77,4 +78,12 @@ double vector_foldr(Vector *v, double (*f)(double, double), double element) {
 	}
 
 	return element;
+}
+
+int vector_equals(Vector *v1, Vector *v2) {
+	int equals = v1->size == v2->size;
+	for (size_t i = 0; equals && i < v1->size; ++i) {
+		equals = equals && vector_at(v1, i) == vector_at(v2, i);
+	}
+	return equals;
 }

@@ -5,6 +5,7 @@ void vector_test_clone();
 
 void vector_test_foldl();
 void vector_test_foldr();
+void vector_test_equals();
 
 int add_vector_tests() {
     CU_pSuite suite = CU_add_suite("Vector", NULL, NULL);
@@ -14,6 +15,7 @@ int add_vector_tests() {
 			&& CU_add_test(suite, "vector_create",	&vector_test_create)
 			&& CU_add_test(suite, "vector_clone",	&vector_test_clone)
 
+			&& CU_add_test(suite, "vector_equals",	&vector_test_equals)
 			&& CU_add_test(suite, "vector_foldl",	&vector_test_foldl)
 			&& CU_add_test(suite, "vector_foldr",	&vector_test_foldr);
 }
