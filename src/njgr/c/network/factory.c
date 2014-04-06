@@ -1,9 +1,11 @@
 #include "network/factory.h"
 
 struct NetworkFactoryModule INetworkFactory = {
-	.init      = &network_factory_init,
-	.add_layer = &network_factory_add_layer,
-	.build     = &network_factory_build
+	.init       = &network_factory_init,
+	.destroy    = &network_factory_destroy,
+	.add_layer  = &network_factory_add_layer,
+	.build      = &network_factory_build,
+	.build_once = &network_factory_build_once
 };
 
 NetworkFactoryData* network_factory_init() {
@@ -12,6 +14,16 @@ NetworkFactoryData* network_factory_init() {
 	data->last   = NULL;
 	data->layers = 0;
 	return data;
+}
+
+void network_factory_destroy(NetworkFactoryData *data) {
+	struct NFDNode *node = data->nodes;
+	for (size_t i = 0; i < data->layers; ++i) {
+		struct NFDNode *next = node->next;
+		free(node);
+		node = next;
+	}
+	free(data);
 }
 
 void network_factory_add_layer(NetworkFactoryData *data, const NetworkLayer layer) {
@@ -42,4 +54,10 @@ Network *network_factory_build(NetworkFactoryData *data) {
 		++i;
 	}
 	return INetwork.create(data->layers, weights, functions, biases);
+}
+
+Network *network_factory_build_once(NetworkFactoryData *data) {
+	Network *network = network_factory_build(data);
+	network_factory_destroy(data);
+	return network;
 }

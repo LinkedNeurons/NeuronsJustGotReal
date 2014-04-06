@@ -25,7 +25,7 @@ void factory_test_build() {
 			.neurons  = 1,
 			.function = ActivationFunctions.sigmoid
 	});
-	Network *net = INetworkFactory.build(data);
+	Network *net = INetworkFactory.build_once(data);
 
 	double result_weights[9];
 	memcpy(result_weights,     net->weights[0].arr, sizeof(double) * 4);
@@ -42,4 +42,6 @@ void factory_test_build() {
 	for (int i = 0; i < 9; ++i) {
 		CU_ASSERT_EQUAL(result_weights[i], genweights[i]);
 	}
+
+	INetwork.destroy(net);
 }

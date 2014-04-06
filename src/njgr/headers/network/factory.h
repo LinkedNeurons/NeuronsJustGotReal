@@ -23,13 +23,17 @@ typedef struct NetworkFactoryData {
 } NetworkFactoryData;
 
 NetworkFactoryData* network_factory_init();
+void network_factory_destroy(NetworkFactoryData *data);
 void network_factory_add_layer(NetworkFactoryData *data, const NetworkLayer layer);
 Network *network_factory_build(NetworkFactoryData *data);
+Network *network_factory_build_once(NetworkFactoryData *data);
 
 struct NetworkFactoryModule {
 	NetworkFactoryData* (*init)(void);
+	void (*destroy)(NetworkFactoryData*);
 	void (*add_layer)(NetworkFactoryData*, const NetworkLayer);
 	Network* (*build)(NetworkFactoryData*);
+	Network* (*build_once)(NetworkFactoryData*);
 };
 
 extern struct NetworkFactoryModule INetworkFactory;
