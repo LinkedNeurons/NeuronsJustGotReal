@@ -6,7 +6,7 @@
 #include "util/swissknife.h"
 
 typedef struct {
-	void* self;
+	int magic;
 	double* arr;
 	size_t rows, cols;
 } Matrix;

@@ -48,11 +48,15 @@ void network_test_gradient_descent() {
 			.neurons  = 1,
 			.function = ActivationFunctions.sigmoid
 	});
-	Network *net = INetworkFactory.build(data);
+	Network *net = INetworkFactory.build_once(data);
 	Vector *input = NULL;
 	Vector *desired = NULL;
 	IVector.init(2, (double[]) { 1, 0 }, &input);
 	IVector.init(1, (double[]) { 1 }, &desired);
 
 	INetwork.gradient_descent(net, input, desired);
+
+	IVector.destroy(input);
+	IVector.destroy(desired);
+	INetwork.destroy(net);
 }

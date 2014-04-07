@@ -44,20 +44,21 @@ void network_destroy(Network *network) {
 
 void network_feed0(Network* network, Vector* input, Matrix** output, Matrix** activations) {
 	if (!*output) {
-		*output = malloc(sizeof(Matrix) * (network->depth - 1));
+		*output = malloc(sizeof(Matrix) * network->depth);
 	}
 	if (!*activations) {
 		*activations = malloc(sizeof(Matrix) * (network->depth - 1));
 	}
 
-	Matrix* column = NULL, *input_mat = malloc(sizeof(Matrix));
+	Matrix* column = NULL;
 	IMatrix.init(input->size, 1, input->tab, &column);
-	*input_mat = *column;
+	**output = *column;
+
 	Matrix* weights                = network->weights;
 	ActivationFunction *activation = network->functions;
 	Matrix* biases_cache           = network->biases_cache;
 	Matrix* out = NULL;
-	Matrix* m = *output, *a = *activations;
+	Matrix* m = *output + 1, *a = *activations;
 
 	for (size_t i = 1; i < network->depth; ++i) {
 		IMatrix.product(weights, column, &out);
@@ -79,14 +80,13 @@ void network_feed0(Network* network, Vector* input, Matrix** output, Matrix** ac
 		out = NULL;
 	}
 	if (column) free(column);
-	IMatrix.destroy(input_mat);
 }
 
 void network_feed(Network* network, Vector* input, Vector** output) {
 	Matrix *out = NULL, *activations = NULL;
 	network_feed0(network, input, &out, &activations);
 	IMatrix.vectorize(activations + network->depth - 2, output);
-	IMatrix.destroy_array(out, network->depth - 1);
+	IMatrix.destroy_array(out, network->depth);
 	IMatrix.destroy_array(activations, network->depth - 1);
 }
 
@@ -113,11 +113,11 @@ void network_gradient_descent(Network* network, Vector* in, Vector* desiredOutpu
 	double  epsilon				   = 1;
 	ActivationFunction *activation = network->functions + network->depth - 2;
 	Matrix *weight                 = network->weights + network->depth - 2;
-	Matrix *output   			   = outputs + (network->depth - 2);
-	Matrix *input   			   = outputs + (network->depth - 3);
+	Matrix *output   			   = outputs + (network->depth - 1);
+	Matrix *input   			   = outputs + (network->depth - 2);
 	Matrix *activated			   = activations + (network->depth - 3);
 
-	Matrix *delta = NULL, *grad = NULL;
+	Matrix *delta = NULL;
 
 	Matrix *desired = NULL;
 	IMatrix.init(desiredOutput->size, 1, desiredOutput->tab, &desired);
@@ -130,6 +130,7 @@ void network_gradient_descent(Network* network, Vector* in, Vector* desiredOutpu
 		Matrix *transactiv = NULL;
 		IMatrix.transpose(activated, &transactiv);
 
+		Matrix *grad = NULL;
 		IMatrix.product(delta, transactiv, &grad);
 		IMatrix.add(weight, grad, &weight);
 
@@ -157,6 +158,7 @@ void network_gradient_descent(Network* network, Vector* in, Vector* desiredOutpu
 		Matrix *transactiv = NULL;
 		IMatrix.transpose(activated, &transactiv);
 
+		Matrix *grad = NULL;
 		IMatrix.product(delta, transactiv, &grad);
 		IMatrix.add(weight, grad, &weight);
 
@@ -168,4 +170,9 @@ void network_gradient_descent(Network* network, Vector* in, Vector* desiredOutpu
 		--weight;
 		--activation;
 	}
+	IMatrix.destroy(delta);
+
+	IMatrix.destroy(desired);
+	IMatrix.destroy_array(outputs, network->depth);
+	IMatrix.destroy_array(activations, network->depth - 1);
 }

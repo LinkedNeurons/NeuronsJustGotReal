@@ -2,6 +2,8 @@
 #include <stdio.h>
 #include "math/matrix.h"
 
+#define MATRIX_MAGIC 0x17A7
+
 struct MatrixModule IMatrix = {
 	.create         = &matrix_create,
 	.init           = &matrix_init,
@@ -28,7 +30,7 @@ void matrix_create0(size_t rows, size_t columns, Matrix **out, bool force) {
 		force = true;
 	}
 	if (force || !matrix_is_valid(*out)) {
-		(*out)->self = *out;
+		(*out)->magic = MATRIX_MAGIC;
 		(*out)->arr  = malloc(rows * columns * sizeof(double));
 		(*out)->rows = rows;
 		(*out)->cols = columns;
@@ -85,7 +87,7 @@ void matrix_destroy_array(Matrix* matrix, size_t size) {
 }
 
 bool matrix_is_valid(Matrix *matrix) {
-	return matrix->self == matrix;
+	return matrix->magic == MATRIX_MAGIC;
 }
 
 double matrix_get(Matrix *matrix, size_t row, size_t col) {
