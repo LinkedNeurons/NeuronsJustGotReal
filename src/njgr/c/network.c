@@ -50,9 +50,6 @@ void network_feed0(Network* network, Vector* input, Matrix** output, Matrix** ac
 		*activations = malloc(sizeof(Matrix) * (network->depth - 1));
 	}
 
-	int *eno = &errno;
-	*eno = 0;
-
 	Matrix* column = NULL, *input_mat = malloc(sizeof(Matrix));
 	IMatrix.init(input->size, 1, input->tab, &column);
 	*input_mat = *column;
@@ -63,7 +60,6 @@ void network_feed0(Network* network, Vector* input, Matrix** output, Matrix** ac
 	Matrix* m = *output, *a = *activations;
 
 	for (size_t i = 1; i < network->depth; ++i) {
-		*eno = 0;
 		IMatrix.product(weights, column, &out);
 		IMatrix.add    (out, biases_cache, &out);
 
@@ -86,34 +82,12 @@ void network_feed0(Network* network, Vector* input, Matrix** output, Matrix** ac
 	IMatrix.destroy(input_mat);
 }
 
-/*void network_feed(Network* network, Vector* input, Vector** output) {
+void network_feed(Network* network, Vector* input, Vector** output) {
 	Matrix *out = NULL, *activations = NULL;
 	network_feed0(network, input, &out, &activations);
 	IMatrix.vectorize(activations + network->depth - 2, output);
 	IMatrix.destroy_array(out, network->depth - 1);
 	IMatrix.destroy_array(activations, network->depth - 1);
-}*/
-void network_feed(Network* network, Vector* input, Vector** output) {
-	Matrix* column = NULL;
-	IMatrix.init(input->size, 1, input->tab, &column);
-	Matrix* weights                = network->weights;
-	ActivationFunction *activation = network->functions;
-	Matrix* biases_cache           = network->biases_cache;
-	Matrix* out = NULL;
-
-	for (size_t i = 1; i < network->depth; ++i) {
-		IMatrix.product(weights, column, &out);
-		IMatrix.add(out, biases_cache, &out);
-		IMatrix.apply(out, activation->function, &out);
-		free(column);
-		column = out;
-		++weights;
-		++activation;
-		++biases_cache;
-		out = NULL;
-	}
-
-	IMatrix.vectorize(column, output);
 }
 
 // Activation functions

@@ -60,13 +60,9 @@ void vector_destroy_array(Vector *array, size_t size) {
 }
 
 Vector *vector_clone(Vector *v) {
-	Vector *clone = malloc(sizeof(Vector));
-	clone->tab    = malloc(v->size * sizeof(double));
-	clone->size   = v->size;
-
-	for(size_t i = 0; i < v->size; ++i) { clone->tab[i] = v->tab[i]; }
-
-	return v;
+	Vector *clone = NULL;
+	vector_init(v->size, v->tab, &clone);
+	return clone;
 }
 
 double vector_at(Vector *v, size_t i) {

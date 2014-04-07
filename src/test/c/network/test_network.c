@@ -19,13 +19,17 @@ void network_test_feed() {
 			.neurons  = 1,
 			.function = ActivationFunctions.sigmoid
 	});
-	Network *net = INetworkFactory.build(data);
+	Network *net = INetworkFactory.build_once(data);
 	Vector *input = NULL;
 	Vector *output = NULL;
 	IVector.init(2, (double[]) { 1, 0 }, &input);
 	INetwork.feed(net, input, &output);
 
 	CU_ASSERT_DOUBLE_EQUAL(output->tab[0], 0.7822, 0.001);
+
+	IVector.destroy(input);
+	IVector.destroy(output);
+	INetwork.destroy(net);
 }
 
 void network_test_gradient_descent() {

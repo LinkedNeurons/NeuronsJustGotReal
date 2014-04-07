@@ -194,6 +194,7 @@ void matrix_test_repmat() {
 	IMatrix.repmat(v, 2, 2, &rep);
 	CU_ASSERT(IMatrix.equals(result, rep));
 
+	IVector.destroy(v);
 	IMatrix.destroy(result);
 	IMatrix.destroy(rep);
 }

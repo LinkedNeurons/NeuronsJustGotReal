@@ -11,6 +11,8 @@ void vector_test_init() {
 	for(size_t i = 0; i < size; ++i) {
 		CU_ASSERT(i + 1 == vector_at(v, i));
 	}
+
+	IVector.destroy(v);
 }
 
 void vector_test_create() {
@@ -21,6 +23,8 @@ void vector_test_create() {
 	for(size_t i = 0; i < size; ++i) {
 		CU_ASSERT(IVector.at(v, i) == 0);
 	}
+
+	IVector.destroy(v);
 }
 
 void vector_test_equals() {
@@ -37,6 +41,11 @@ void vector_test_equals() {
 
 	CU_TEST_FATAL(IVector.equals(v1, v2) == 1);
 	CU_TEST_FATAL(IVector.equals(v1, v3) == 0);
+
+	IVector.destroy(v1);
+	IVector.destroy(v2);
+	IVector.destroy(v3);
+	IVector.destroy(v4);
 }
 
 
@@ -52,6 +61,9 @@ void vector_test_clone() {
 	for(size_t i = 0; i < size; ++i) {
 		CU_ASSERT(IVector.at(v, i) == IVector.at(vc, i));
 	}
+
+	IVector.destroy(v);
+	IVector.destroy(vc);
 }
 
 void vector_test_foldl() {

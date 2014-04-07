@@ -5,6 +5,7 @@ int add_network_tests() {
     CU_pSuite suite = CU_add_suite("Network", NULL, NULL);
 
     return suite 
-		&& CU_add_test(suite, "network_feed",	&network_test_feed);
-		//&& CU_add_test(suite, "network_gradient_descent",	&network_test_gradient_descent);
+		&& CU_add_test(suite, "network_feed",	&network_test_feed)
+		//&& CU_add_test(suite, "network_gradient_descent",	&network_test_gradient_descent)
+		;
 }

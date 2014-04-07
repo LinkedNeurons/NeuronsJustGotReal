@@ -25,6 +25,7 @@ struct MatrixModule IMatrix = {
 void matrix_create0(size_t rows, size_t columns, Matrix **out, bool force) {
 	if (!*out) {
 		*out = malloc(sizeof(Matrix));
+		force = true;
 	}
 	if (force || !matrix_is_valid(*out)) {
 		(*out)->self = *out;
@@ -102,9 +103,9 @@ void matrix_product(Matrix *m1, Matrix *m2, Matrix **result) {
 	}
 	matrix_create0(m1->rows, m2->cols, result, false);
 	for (size_t i = 0; i < m1->rows; ++i) {
-		for (size_t j = 0; j < m1->cols; ++j) {
+		for (size_t j = 0; j < m2->cols; ++j) {
 			double sum = 0;
-			for (size_t k = 0; k < m1->cols; ++k)
+			for (size_t k = 0; k < m2->rows; ++k)
 				sum += matrix_get(m1, i, k) * matrix_get(m2, k, j);
 			matrix_set(*result, i, j, sum);
 		}

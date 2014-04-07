@@ -29,6 +29,9 @@ void test_marshal_basic() {
 		CU_ASSERT_EQUAL(readarr[i], arr[i]);
 	}
 	CU_ASSERT_STRING_EQUAL(readstr, str);
+
+	free(readarr);
+	free(readstr);
 }
 
 void test_marshal_math() {
@@ -57,4 +60,9 @@ void test_marshal_math() {
 
 	CU_ASSERT(IMatrix.equals(m, readm));
 	CU_ASSERT(IVector.equals(v, readv));
+
+	IMatrix.destroy(m);
+	IMatrix.destroy(readm);
+	IVector.destroy(v);
+	IVector.destroy(readv);
 }
