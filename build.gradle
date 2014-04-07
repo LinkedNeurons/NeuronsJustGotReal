@@ -1,4 +1,4 @@
-defaultTasks 'clean', 'injectLibs', 'njgrSharedLibrary', 'installTestExecutable', 'runTests'
+defaultTasks 'clean', 'release_build', 'runTests'
 
 // Apply plugins
 apply plugin: 'c'
@@ -17,40 +17,58 @@ ext.description = 'A C library for neural networks.'
 ext.organization = 'LinkedNeurons'
 
 libraries {
-    njgr {}
+	njgr {}
+	njgr_graphics {
+		binaries.all {
+			cCompiler.args '-I', "/usr/local/include"
+			linker.args '-lSDL', "-lSDL_draw"
+		}
+	}
 }
 
 executables {
-    test {
-        binaries.all {
-            cCompiler.args '-I', "/usr/local/include"
-        }
-    }
-    display {
-        binaries.all {
-            cCompiler.args '-I', "/usr/local/include"
-        }
-    }
+	test {
+		binaries.all {
+			cCompiler.args '-I', "/usr/local/include"
+			linker.args '-lcunit'
+		}
+	}
+	sample_graphics {
+		binaries.all {
+			cCompiler.args '-I', "/usr/local/include"
+			linker.args '-lSDL'
+		}
+	}
 }
 
 sources {
-    njgr {
-        c {
-            source {
-                include "**/*.c"
-            }
-        }
-    }
-    test {
-        c {
-            lib libraries.njgr
-            source {
-                include "**/*.c"
-            }
-        }
-    }
-	display {
+	njgr {
 		c {
+			source {
+				include "**/*.c"
+			}
+		}
+	}
+	njgr_graphics {
+		c {
+			lib libraries.njgr
+			source {
+				include "**/*.c"
+			}
+		}
+	}
+	test {
+		c {
+			lib libraries.njgr
+			source {
+				include "**/*.c"
+			}
+		}
+	}
+	sample_graphics {
+		c {
+			lib libraries.njgr
+			lib libraries.njgr_graphics
 			source {
 				include "**/*.c"
 			}
@@ -59,55 +77,54 @@ sources {
 }
 
 model {
-    buildTypes {
-        debug {}
-        snapshot {}
-        release {}
-    }
+	buildTypes {
+		debug {}
+		release {}
+	}
 }
 
 buildscript {
-    repositories {
-        mavenCentral()
-    }
-    dependencies {}
+	repositories {
+		mavenCentral()
+	}
+	dependencies {}
 }
 
-task injectLibs << {
-    linkTestExecutable.doFirst {
-        binaries.all {
-            toolChain.linker.withArguments { args ->
-                if (!args.contains("-lcunit")) {
-                    args << "-lcunit"
-                }
-                if (!args.contains("-lSDL")) {
-                    args << "-lSDL"
-                    args << "-lSDL_draw"
-                }
-            }
-        }
-    }
+task release_build {
+	dependsOn binaries.withType(SharedLibraryBinary).matching { 
+		it.buildable && it.buildType == buildTypes.release
+	}
+	dependsOn binaries.withType(ExecutableBinary).matching {
+		it.buildable && it.buildType == buildTypes.release
+	}
+}
+
+task debug_build {
+	dependsOn binaries.withType(SharedLibraryBinary).matching { 
+		it.buildable && it.buildType == buildTypes.debug
+	}
+	dependsOn binaries.withType(ExecutableBinary).matching {
+		it.buildable && it.buildType == buildTypes.debug
+	}
 }
 
 task runTests(type:Exec) {
-    workingDir './build/install/testExecutable/'
-    commandLine './test'
+	dependsOn release_build
+	workingDir './build/install/testExecutable/release'
+	commandLine './test'
 }
 
-task test {}
-task snapshot {}
-task release {}
+afterEvaluate {
+	runTests.dependsOn installReleaseTestExecutable
+}
 
 binaries.all {
-    cCompiler.args "-Wall"
-
-    if (toolChain in Gcc || toolChain in Clang) {
-        cCompiler.args "-Wextra"
-        cCompiler.args "--std=c99"
-        if (buildType == buildTypes.debug) {
-            cCompiler.args "-g"
-        } else {
-            cCompiler.args "-O3"
-        }
-    }
+	if (toolChain in Gcc || toolChain in Clang) {
+		cCompiler.args "-Wall", "-Wextra", "--std=c99"
+		if (buildType == buildTypes.debug) {
+			cCompiler.args "-g"
+		} else {
+			cCompiler.args "-O3"
+		}
+	}
 }
