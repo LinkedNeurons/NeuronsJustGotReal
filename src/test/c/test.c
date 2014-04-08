@@ -6,6 +6,7 @@
 #include "network/test_factory.h"
 #include "network/test_network.h"
 #include "io/test_marshal.h"
+#include "genetics/test_population.h"
 
 int main() {
 	if (CUE_SUCCESS != CU_initialize_registry())
@@ -17,6 +18,7 @@ int main() {
 		&& add_factory_tests()
 		&& add_network_tests()
 		&& add_marshal_tests()
+		&& add_population_tests()
 		;
 
 	unsigned tests_failed = 0;
