@@ -21,7 +21,7 @@ libraries {
 	njgr_graphics {
 		binaries.all {
 			cCompiler.args '-I', "/usr/local/include"
-			linker.args '-lSDL', "-lSDL_draw"
+			linker.args '-lSDL', '-lSDL_draw'
 		}
 	}
 }
@@ -91,7 +91,7 @@ buildscript {
 }
 
 task release_build {
-	dependsOn binaries.withType(SharedLibraryBinary).matching { 
+	dependsOn binaries.withType(SharedLibraryBinary).matching {
 		it.buildable && it.buildType == buildTypes.release
 	}
 	dependsOn binaries.withType(ExecutableBinary).matching {
@@ -100,7 +100,7 @@ task release_build {
 }
 
 task debug_build {
-	dependsOn binaries.withType(SharedLibraryBinary).matching { 
+	dependsOn binaries.withType(SharedLibraryBinary).matching {
 		it.buildable && it.buildType == buildTypes.debug
 	}
 	dependsOn binaries.withType(ExecutableBinary).matching {
