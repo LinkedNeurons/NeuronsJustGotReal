@@ -18,6 +18,12 @@ ext.organization = 'LinkedNeurons'
 
 libraries {
 	njgr {}
+	njgr_graphics {
+		binaries.all {
+			cCompiler.args '-I', "/usr/local/include"
+			linker.args '-lSDL', '-lSDL_draw'
+		}
+	}
 }
 
 executables {
@@ -25,6 +31,12 @@ executables {
 		binaries.all {
 			cCompiler.args '-I', "/usr/local/include"
 			linker.args '-lcunit'
+		}
+	}
+	sample_graphics {
+		binaries.all {
+			cCompiler.args '-I', "/usr/local/include"
+			linker.args '-lSDL'
 		}
 	}
 }
@@ -37,9 +49,26 @@ sources {
 			}
 		}
 	}
+	njgr_graphics {
+		c {
+			lib libraries.njgr
+			source {
+				include "**/*.c"
+			}
+		}
+	}
 	test {
 		c {
 			lib libraries.njgr
+			source {
+				include "**/*.c"
+			}
+		}
+	}
+	sample_graphics {
+		c {
+			lib libraries.njgr
+			lib libraries.njgr_graphics
 			source {
 				include "**/*.c"
 			}
