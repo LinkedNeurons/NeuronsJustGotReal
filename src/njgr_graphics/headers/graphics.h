@@ -1,7 +1,7 @@
 #ifndef GRAPHICS_H_
 #define GRAPHICS_H_
 
-#include <network.h>
+#include <njgr/network/network.h>
 #include <SDL/SDL.h>
 
 void graphics_draw_network(Network *network, SDL_Surface *surface, int x, int y);

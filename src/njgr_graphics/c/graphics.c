@@ -3,7 +3,7 @@
 #include <math.h>
 #include "graphics.h"
 
-#include <network/factory.h>
+#include <njgr/network/factory.h>
 #include <SDL/SDL_draw.h>
 #include <SDL/SDL.h>
 

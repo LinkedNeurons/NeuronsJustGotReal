@@ -1,7 +1,7 @@
 #include <SDL/SDL.h>
 #include <graphics.h>
-#include <network.h>
-#include <network/factory.h>
+#include <njgr/network/network.h>
+#include <njgr/network/factory.h>
 
 void init(SDL_Surface **display, Network **network) {
 	NetworkFactoryData *data = INetworkFactory.init();
