@@ -1,4 +1,4 @@
-#include "network/factory.h"
+#include "njgr/network/factory.h"
 
 struct NetworkFactoryModule INetworkFactory = {
 	.init       = &network_factory_init,
@@ -41,9 +41,9 @@ double randweight() {
 }
 
 Network *network_factory_build(NetworkFactoryData *data) {
-	Matrix* weights = malloc(sizeof(Matrix) * data->layers);
-	Vector* biases  = malloc(sizeof(Vector) * data->layers);
-	ActivationFunction *functions = malloc(sizeof(ActivationFunction) * data->layers);
+	Matrix* weights = malloc(sizeof(Matrix) * data->layers - 1);
+	Vector* biases  = malloc(sizeof(Vector) * data->layers - 1);
+	ActivationFunction *functions = malloc(sizeof(ActivationFunction) * data->layers - 1);
 	size_t i = 0;
 	for (struct NFDNode *node = data->nodes; node && node->next; node = node->next) {
 		Matrix *weight = weights + i;

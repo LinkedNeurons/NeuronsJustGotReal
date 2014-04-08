@@ -1,6 +1,6 @@
 #include <string.h>
-#include "util/swissknife.h"
-#include "io/marshal.h"
+#include "njgr/util/swissknife.h"
+#include "njgr/io/marshal.h"
 
 void marshal_write_array(FILE *stream, void *buffer, size_t size, size_t num) {
 	size_t length = size * num;

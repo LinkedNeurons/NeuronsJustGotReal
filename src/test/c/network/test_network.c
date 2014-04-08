@@ -1,5 +1,5 @@
-#include <network.h>
-#include <network/factory.h>
+#include <njgr/network/network.h>
+#include <njgr/network/factory.h>
 #include <stdio.h>
 #include <CUnit/CUnit.h>
 

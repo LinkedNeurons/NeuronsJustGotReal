@@ -2,8 +2,8 @@
 #define MATRIX_H_
 
 #include <stdlib.h>
-#include "math/vector.h"
-#include "util/swissknife.h"
+#include "njgr/math/vector.h"
+#include "njgr/util/swissknife.h"
 
 typedef struct {
 	int magic;

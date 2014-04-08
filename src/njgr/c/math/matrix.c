@@ -1,6 +1,6 @@
 #include <errno.h>
 #include <stdio.h>
-#include "math/matrix.h"
+#include "njgr/math/matrix.h"
 
 #define MATRIX_MAGIC 0x17A7
 

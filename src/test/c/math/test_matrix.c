@@ -1,6 +1,6 @@
 #include <errno.h>
 #include <CUnit/CUnit.h>
-#include <math/matrix.h>
+#include <njgr/math/matrix.h>
 
 void matrix_test_create() {
 	Matrix* matrix = NULL;

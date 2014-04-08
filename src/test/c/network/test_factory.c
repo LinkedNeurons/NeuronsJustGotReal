@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <time.h>
 #include <CUnit/CUnit.h>
-#include <network/factory.h>
+#include <njgr/network/factory.h>
 
 double randweights() {
 	return (double) rand() / RAND_MAX;

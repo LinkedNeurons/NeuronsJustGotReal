@@ -3,8 +3,8 @@
 
 #include <stdio.h>
 #include <stdint.h>
-#include "math/vector.h"
-#include "math/matrix.h"
+#include "njgr/math/vector.h"
+#include "njgr/math/matrix.h"
 
 void marshal_write_array(FILE *stream, void *buffer, size_t size, size_t num);
 void marshal_write_string(FILE *stream, char *buffer);

@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <math.h>
 
-#include "math/vector.h"
+#include "njgr/math/vector.h"
 
 struct VectorModule IVector = {
 	.init          = &vector_init,

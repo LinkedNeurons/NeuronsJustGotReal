@@ -3,7 +3,7 @@
 #include <stdint.h>
 #include <stdio.h>
 
-#include "io/marshal.h"
+#include <njgr/io/marshal.h>
 
 void test_marshal_basic() {
 	FILE *file = fopen("marshal_test", "w+");

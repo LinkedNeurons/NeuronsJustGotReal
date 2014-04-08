@@ -3,8 +3,8 @@
 
 #include <stdlib.h>
 #include <math.h>
-#include "math/vector.h"
-#include "math/matrix.h"
+#include "njgr/math/vector.h"
+#include "njgr/math/matrix.h"
 
 typedef struct ActivationFunction {
 	double (*function)(double);

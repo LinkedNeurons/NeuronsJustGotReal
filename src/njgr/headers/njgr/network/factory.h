@@ -2,9 +2,9 @@
 #define _NETWORK_FACTORY_H_
 
 #include <stdlib.h>
-#include "network.h"
-#include "math/matrix.h"
-#include "math/vector.h"
+#include "njgr/network/network.h"
+#include "njgr/math/matrix.h"
+#include "njgr/math/vector.h"
 
 typedef struct NetworkLayer {
 	size_t neurons;

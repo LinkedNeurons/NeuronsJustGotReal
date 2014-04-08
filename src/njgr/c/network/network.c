@@ -2,10 +2,10 @@
 #include <stdio.h>
 #include <errno.h>
 
-#include "network.h"
-#include "math/matrix.h"
-#include "math/vector.h"
-#include "util/swissknife.h"
+#include "njgr/network/network.h"
+#include "njgr/math/matrix.h"
+#include "njgr/math/vector.h"
+#include "njgr/util/swissknife.h"
 
 struct NetworkModule INetwork = {
 	.create  = &network_create,
