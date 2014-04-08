@@ -1,4 +1,4 @@
-defaultTasks 'clean', 'injectLibs', 'njgrSharedLibrary', 'installTestExecutable', 'runTests'
+defaultTasks 'clean', 'release_build', 'runTests'
 
 // Apply plugins
 apply plugin: 'c'
@@ -17,81 +17,85 @@ ext.description = 'A C library for neural networks.'
 ext.organization = 'LinkedNeurons'
 
 libraries {
-    njgr {}
+	njgr {}
 }
 
 executables {
-    test {
-        binaries.all {
-            cCompiler.args '-I', "/usr/local/include"
-        }
-    }
+	test {
+		binaries.all {
+			cCompiler.args '-I', "/usr/local/include"
+			linker.args '-lcunit'
+		}
+	}
 }
 
 sources {
-    njgr {
-        c {
-            source {
-                include "**/*.c"
-            }
-        }
-    }
-    test {
-        c {
-            lib libraries.njgr
-            source {
-                include "**/*.c"
-            }
-        }
-    }
+	njgr {
+		c {
+			source {
+				include "**/*.c"
+			}
+		}
+	}
+	test {
+		c {
+			lib libraries.njgr
+			source {
+				include "**/*.c"
+			}
+		}
+	}
 }
 
 model {
-    buildTypes {
-        debug {}
-        snapshot {}
-        release {}
-    }
+	buildTypes {
+		debug {}
+		release {}
+	}
 }
 
 buildscript {
-    repositories {
-        mavenCentral()
-    }
-    dependencies {}
+	repositories {
+		mavenCentral()
+	}
+	dependencies {}
 }
 
-task injectLibs << {
-    linkTestExecutable.doFirst {
-        binaries.all {
-            toolChain.linker.withArguments { args ->
-                if (!args.contains("-lcunit")) {
-                    args << "-lcunit"
-                }
-            }
-        }
-    }
+task release_build {
+	dependsOn binaries.withType(SharedLibraryBinary).matching {
+		it.buildable && it.buildType == buildTypes.release
+	}
+	dependsOn binaries.withType(ExecutableBinary).matching {
+		it.buildable && it.buildType == buildTypes.release
+	}
+}
+
+task debug_build {
+	dependsOn binaries.withType(SharedLibraryBinary).matching {
+		it.buildable && it.buildType == buildTypes.debug
+	}
+	dependsOn binaries.withType(ExecutableBinary).matching {
+		it.buildable && it.buildType == buildTypes.debug
+	}
 }
 
 task runTests(type:Exec) {
-    workingDir './build/install/testExecutable/'
-    commandLine './test'
+	dependsOn release_build
+	workingDir './build/install/testExecutable/release'
+	commandLine './test'
 }
 
-task test {}
-task snapshot {}
-task release {}
+afterEvaluate {
+	runTests.dependsOn installReleaseTestExecutable
+}
 
 binaries.all {
-    cCompiler.args "-Wall"
-
-    if (toolChain in Gcc || toolChain in Clang) {
-        cCompiler.args "-Wextra"
-        cCompiler.args "--std=c99"
-        if (buildType == buildTypes.debug) {
-            cCompiler.args "-g"
-        } else {
-            cCompiler.args "-O3"
-        }
-    }
+	if (toolChain in Gcc || toolChain in Clang) {
+		cCompiler.args "-Wall", "-Wextra", "--std=c99"
+		if (buildType == buildTypes.debug) {
+			cCompiler.args "-g"
+		} else {
+			cCompiler.args "-O3"
+		}
+	}
 }
