@@ -164,5 +164,6 @@ binaries.all {
 		} else {
 			cCompiler.args "-O3"
 		}
+		cCompiler.args "-Wno-unused-result"
 	}
 }
