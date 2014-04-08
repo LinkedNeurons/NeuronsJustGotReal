@@ -26,8 +26,6 @@ void population_test_generation() {
 	Specimen *a = p->specimens[0];
 	Specimen *b = p->specimens[1];
 	Specimen *c = p->specimens[2];
-	Specimen *d = p->specimens[3];
-	Specimen *e = p->specimens[4];
 
 	a->score = 1;
 	b->score = 2;
@@ -38,4 +36,6 @@ void population_test_generation() {
 	CU_ASSERT_EQUAL(c, p->specimens[0]);
 	CU_ASSERT_EQUAL(b, p->specimens[1]);
 	CU_ASSERT_EQUAL(a, p->specimens[2]);
+
+	IPopulation.destroy(p);
 }

@@ -33,6 +33,7 @@ void population_destroy(Population *p) {
 	for (size_t i = 0; i < p->size; ++i) {
 		population_destroy_specimen(p->specimens[i]);
 	}
+	free(p->specimens);
 	INetworkFactory.destroy(p->factory_data);
 	free(p);
 }
