@@ -24,4 +24,12 @@ double population_pick_inheritance(size_t index, double c1, double c2);
 void population_breed(Specimen *s1, Specimen *s2, Specimen **offspring);
 void population_next_generation(Population *population, size_t nb_keep, size_t nb_new);
 
+struct PopulationModule {
+	Population* (*create)(const size_t, NetworkFactoryData*);
+	void (*destroy)(Population*);
+	void (*next_generation)(Population*, size_t, size_t);
+};
+
+extern struct PopulationModule IPopulation;
+
 #endif // POPULATIONS_H_

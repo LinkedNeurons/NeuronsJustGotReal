@@ -2,6 +2,12 @@
 #include "njgr/math/vector.h"
 #include "njgr/genetics/populations.h"
 
+struct PopulationModule IPopulation = {
+	.create          = &population_create,
+	.destroy         = &population_destroy,
+	.next_generation = &population_next_generation
+};
+
 Population* population_create(const size_t size, NetworkFactoryData *data) {
 	Population *p = NULL;
 	new_struct(p, Population) {
