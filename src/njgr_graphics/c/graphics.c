@@ -40,8 +40,20 @@ int graphics_get_position(Network *net, size_t layer, int neuron, int max) {
 	return ((int)max / (layer_size + 1)) * neuron;
 }
 
-void graphics_draw_network(Network *network, SDL_Surface *surface, int x, int y) {
-	size_t max = graphics_get_max_layer_size(network) * (NEURON_SIZE + NEURON_MARGIN);
+int has_too_big_of_a_girth(SDL_Surface *surface, int depth, int max_size, int x, int y) {
+	int width  = depth    * (NEURON_SIZE + LAYER_MARGIN)  - LAYER_MARGIN ;
+	int height = max_size * (NEURON_SIZE + NEURON_MARGIN) - NEURON_MARGIN;
+
+	if(surface->w - x < width)  { return 0; }
+	if(surface->h - y < height) { return 0; }
+	return 1;     
+}
+
+void graphics_draw_network(Network *network, SDL_Surface *surface, int x, int y) {\
+	int maxNeurons = graphics_get_max_layer_size(network);
+	size_t max = maxNeurons * (NEURON_SIZE + NEURON_MARGIN);
+
+	if(!has_too_big_of_a_girth(surface, network->depth, maxNeurons, x, y)) { return; }
 
 	Matrix *m = network->weights;
 	size_t i = 0;
