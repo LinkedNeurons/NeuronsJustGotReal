@@ -1,14 +1,13 @@
 language: c
 compiler: clang
 install:
-    - sudo apt-get install libsdl1.2-dev libsdl1.2debian mlocate
+    - sudo apt-get install libsdl1.2-dev libsdl1.2debian
     - wget 'http://downloads.sourceforge.net/project/sdl-draw/SDL_draw/1.2.13/SDL_draw-1.2.13.tar.gz' -O sdl_draw.tar.gz
     - tar -xzf sdl_draw.tar.gz
     - cd SDL_draw-1.2.13/
     - ./configure --prefix=/usr/local/
     - make && sudo make install
-    - sudo updatedb
-    - header=`locate SDL.h` sudo cp -f include/SDL_draw.h ${header%/*}
+    - sudo cp -f include/SDL_draw.h /usr/include/SDL
     - cd ..
     - wget 'http://downloads.sourceforge.net/project/cunit/CUnit/2.1-2/CUnit-2.1-2-src.tar.bz2' -O cunit.tar.bz2
     - tar -xjf cunit.tar.bz2
