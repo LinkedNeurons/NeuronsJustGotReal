@@ -40,9 +40,21 @@ int graphics_get_position(Network *net, size_t layer, int neuron, int max) {
 	return ((int)max / (layer_size + 1)) * neuron;
 }
 
+void getMinimalDimensions0(Network *net, int *width, int* height) {
+	int maxNeurons = graphics_get_max_layer_size(net);
+	getMinimalDimensions(net->depth, maxNeurons, width, height);
+}
+
+void getMinimalDimensions(int depth, int max_size, int *width, int* height) {
+	*width  = depth    * (NEURON_SIZE + LAYER_MARGIN)  - LAYER_MARGIN ;
+	*height = max_size * (NEURON_SIZE + NEURON_MARGIN) - NEURON_MARGIN;
+}
+
 int has_too_big_of_a_girth(SDL_Surface *surface, int depth, int max_size, int x, int y) {
-	int width  = depth    * (NEURON_SIZE + LAYER_MARGIN)  - LAYER_MARGIN ;
-	int height = max_size * (NEURON_SIZE + NEURON_MARGIN) - NEURON_MARGIN;
+	int width  = 0;
+	int height = 0;
+
+	getMinimalDimensions(depth, max_size, &width, &height);
 
 	if(surface->w - x < width)  { return 0; }
 	if(surface->h - y < height) { return 0; }
