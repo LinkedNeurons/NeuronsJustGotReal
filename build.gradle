@@ -41,7 +41,7 @@ executables {
 	sample_2048 {
 		binaries.all {
 			cCompiler.args '-I', "/usr/local/include"
-			linker.args '-lSDL'
+			linker.args '-lSDL', '-lSDL_image'
 		}
 	}
 	sample_graphics {
