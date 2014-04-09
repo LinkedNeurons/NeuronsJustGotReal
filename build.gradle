@@ -33,7 +33,9 @@ executables {
 			linker.args '-lcunit'
 		}
 	}
-	samples {
+
+	// Samples
+	sample_xor {
 		binaries.all {
 			cCompiler.args '-I', "/usr/local/include"
 		}
@@ -76,19 +78,23 @@ sources {
 			}
 		}
 	}
+
+	// Samples
+	sample_xor {
+		c {
+			lib libraries.njgr
+			source {
+				srcDir "src/samples/xor"
+				include "**/*.c"
+			}
+		}
+	}
 	sample_graphics {
 		c {
 			lib libraries.njgr
 			lib libraries.njgr_graphics
 			source {
-				include "**/*.c"
-			}
-		}
-	}
-	samples {
-		c {
-			lib libraries.njgr
-			source {
+				srcDir "src/samples/graphics"
 				include "**/*.c"
 			}
 		}
@@ -97,6 +103,7 @@ sources {
 		c {
 			lib libraries.njgr
 			source {
+				srcDir "src/samples/2048"
 				include "**/*.c"
 			}
 		}
@@ -142,17 +149,18 @@ task runTests(type:Exec) {
 }
 
 task copyAssetsFor2048(type: Copy) {
-	from 'assets/samples_2048/'
-	into 'build/install/sample_2048Executable/assets/'
+	from 'src/samples/2048/resources/'
+	into 'build/install/sample_2048Executable/release/assets/'
 }
 
 task run2048(type:Exec) {
-	dependsOn copyAssetsFor2048
-	workingDir './build/install/sample_2048Executable/'
+	workingDir './build/install/sample_2048Executable/release'
 	commandLine './sample_2048'
 }
 
-afterEvaluate {
+afterEvaluate { project ->
+	copyAssetsFor2048.dependsOn installReleaseSample_2048Executable
+	run2048.dependsOn copyAssetsFor2048
 	runTests.dependsOn installReleaseTestExecutable
 }
 
