@@ -152,7 +152,15 @@ task copyAssetsFor2048(type: Copy) {
 	from 'src/samples/2048/resources/'
 	into 'build/install/sample_2048Executable/release/assets/'
 }
+task copyAssetsFor2048Debug(type: Copy) {
+	from 'src/samples/2048/resources/'
+	into 'build/install/sample_2048Executable/debug/assets/'
+}
 
+task run2048Debug(type:Exec) {
+	workingDir './build/install/sample_2048Executable/debug'
+	commandLine './sample_2048'
+}
 task run2048(type:Exec) {
 	workingDir './build/install/sample_2048Executable/release'
 	commandLine './sample_2048'
@@ -160,7 +168,9 @@ task run2048(type:Exec) {
 
 afterEvaluate { project ->
 	copyAssetsFor2048.dependsOn installReleaseSample_2048Executable
+	copyAssetsFor2048Debug.dependsOn installDebugSample_2048Executable
 	run2048.dependsOn copyAssetsFor2048
+	run2048Debug.dependsOn copyAssetsFor2048Debug
 	runTests.dependsOn installReleaseTestExecutable
 }
 

@@ -6,7 +6,7 @@
 
 typedef struct {
 	Network *network;
-	int score;
+	long long score;
 } Specimen;
 
 typedef struct {
@@ -21,7 +21,7 @@ void population_init(Population *p);
 void population_destroy(Population *p);
 void population_destroy_specimen(Specimen *s);
 void population_sort_fittest(Specimen**, size_t);
-double population_pick_inheritance(size_t index, double c1, double c2);
+double population_pick_inheritance(size_t size, size_t index, double c1, double c2);
 void population_breed(Specimen *s1, Specimen *s2, Specimen **offspring);
 void population_next_generation(Population *population, size_t nb_keep, size_t nb_new);
 

@@ -65,9 +65,18 @@ void population_sort_fittest(Specimen **tab, size_t n) {
 	population_sort_fittest(l, tab + n - l);
 }
 
-double population_pick_inheritance(size_t index, double c1, double c2) {
-	return index / 10 % 2 ? c1 : c2;
+double random_weight() {
+	return (double) rand() / RAND_MAX;
 }
+
+double population_pick_inheritance(size_t size, size_t index, double c1, double c2) {
+	(void) size;
+	return rand() % 100 ? random_weight() : (index / (rand() % 10 + 1) % 2 ? c1 : c2);
+}
+
+/*double population_pick_inheritance(size_t size, size_t index, double c1, double c2) {
+	return index < size >> 1 ? c1 : c2;
+}*/
 
 void population_breed(Specimen *s1, Specimen *s2, Specimen **offspring) {
 	size_t length = s1->network->depth - 1;
@@ -84,13 +93,13 @@ void population_breed(Specimen *s1, Specimen *s2, Specimen **offspring) {
 	for (size_t i = 0; i < length; ++i, ++w, ++v, ++f, ++w1, ++w2, ++v1, ++v2, ++f1) {
 		double weight_array[w1->rows * w1->cols];
 		for (size_t j = 0; j < (w1->rows * w1->cols); ++j) {
-			weight_array[j] = population_pick_inheritance(j, w1->arr[j], w2->arr[j]);
+			weight_array[j] = population_pick_inheritance((w1->rows * w1->cols), j, w1->arr[j], w2->arr[j]);
 		}
 		IMatrix.init(w1->rows, w1->cols, weight_array, &w);
 
 		double bias_array[v1->size];
 		for (size_t j = 0; j < v1->size; ++j) {
-			bias_array[j] = population_pick_inheritance(j, v1->tab[j], v2->tab[j]);
+			bias_array[j] = population_pick_inheritance(v1->size, j, v1->tab[j], v2->tab[j]);
 		}
 		IVector.init(v1->size, bias_array, &v);
 
@@ -110,7 +119,12 @@ void population_next_generation(Population *population, size_t nb_keep, size_t n
 	Specimen **tab= population->specimens;
 	for (; i < population->size - nb_new; ++i) {
 		population_destroy_specimen(tab[i]);
-		population_breed(tab[rand() % nb_keep], tab[rand() % nb_keep], &(tab[i]));
+		size_t first, second;
+		do {
+			first  = rand() % (nb_keep);
+			second = rand() % (nb_keep);
+		} while (first == second);
+		population_breed(tab[first], tab[second], &(tab[i]));
 	}
 
 	for (; i < population->size; ++i) {
