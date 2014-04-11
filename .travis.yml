@@ -1,7 +1,7 @@
 language: c
 compiler: clang
 install:
-    - sudo apt-get install libsdl1.2-dev libsdl1.2debian
+    - sudo apt-get install libsdl1.2-dev libsdl1.2debian libsdl-image1.2 libsdl-image1.2-dev
     - wget 'http://downloads.sourceforge.net/project/sdl-draw/SDL_draw/1.2.13/SDL_draw-1.2.13.tar.gz' -O sdl_draw.tar.gz
     - tar -xzf sdl_draw.tar.gz
     - cd SDL_draw-1.2.13/
