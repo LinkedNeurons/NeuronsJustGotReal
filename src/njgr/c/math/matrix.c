@@ -1,6 +1,8 @@
 #include <errno.h>
 #include <stdio.h>
+
 #include "njgr/math/matrix.h"
+#include "njgr/math/intrinsics.h"
 
 #define MATRIX_MAGIC 0x17A7
 
@@ -30,8 +32,14 @@ void matrix_create0(size_t rows, size_t columns, Matrix **out, bool force) {
 		force = true;
 	}
 	if (force || !matrix_is_valid(*out)) {
+		size_t colsize = columns;
+#ifdef INTRINSICS_SUPPORT
+		colsize = (colsize + 1) & ~1;
+#endif
 		(*out)->magic = MATRIX_MAGIC;
-		(*out)->arr  = malloc(rows * columns * sizeof(double));
+		(*out)->size = rows * colsize;
+		(*out)->colsize = colsize;
+		(*out)->arr  = malloc((*out)->size * sizeof(double));
 		(*out)->rows = rows;
 		(*out)->cols = columns;
 	}
@@ -98,20 +106,53 @@ void matrix_set(Matrix *matrix, size_t row, size_t col, double value) {
 	matrix->arr[col + matrix->cols * row] = value;
 }
 
+/*void __sse2_product(size_t n, size_t m, size_t km, double* A, double *B, double* C) {
+	__m128d a, b, c;
+	for (size_t i = 0, size = n * m; i < size; ++i) {
+		a = _mm_load_pd(A);
+		b = _mm_set1_pd(B + i);
+		c = _mm_mul_pd(a, b);
+		for (size_t j = 1; j < m; ++j) {
+			a = _mm_load_pd(A + n*j);
+			b = _mm_set1_pd(B[i + j]);
+			c = _mm_add_pd(_mm_mul_ps(a, b), c);
+		}
+		_mm_store(C + i, c);
+	}
+}*/
+
 void matrix_product(Matrix *m1, Matrix *m2, Matrix **result) {
 	if (m1->cols != m2->rows) {
 		errno = EDOM;
 		return;
 	}
 	matrix_create0(m1->rows, m2->cols, result, false);
+	double *A = m1->arr, *B = m2->arr, *C = (*result)->arr;
+/*#ifdef INTRINSICS_SUPPORT
+	__m128d a, b, c;
+	for (size_t i = 0; i < m1->rows; ++i) {
+		for (size_t j = 0; j < m2->cols; j += 2) {
+			a = _mm_set1_pd(A[i*colsize]);
+			b = _mm_load_pd(B + j);
+			c = _mm_mul_pd(a, b);
+			for (size_t k = 1; k < m2->rows; ++k) {
+				a = _mm_set1_pd(A[k + i * m1->colsize]);
+				b = _mm_load_pd(B + j + k * m2->colsize);
+				c = _mm_add_pd(_mm_mul_pd(a, b), c);
+			}
+			_mm_store_pd(C + j + i * (*result)->colsize, c);
+		}
+	}
+#else*/
 	for (size_t i = 0; i < m1->rows; ++i) {
 		for (size_t j = 0; j < m2->cols; ++j) {
 			double sum = 0;
 			for (size_t k = 0; k < m2->rows; ++k)
-				sum += matrix_get(m1, i, k) * matrix_get(m2, k, j);
-			matrix_set(*result, i, j, sum);
+				sum += A[k + i*m1->cols] * B[j + k*m2->cols];
+			C[j + i*(*result)->cols] = sum;
 		}
 	}
+//#endif
 }
 
 void matrix_mul(Matrix *matrix, double factor, Matrix **result) {
@@ -129,11 +170,17 @@ void matrix_add(Matrix *m1, Matrix *m2, Matrix **result) {
 		return;
 	}
 	matrix_create0(m1->rows, m1->cols, result, false);
-	for (size_t i = 0; i < m1->rows; ++i) {
-		for (size_t j = 0; j < m1->cols; ++j) {
-			matrix_set(*result, i, j, matrix_get(m1, i, j) + matrix_get(m2, i, j));
-		}
+	size_t n = m1->rows * m1->cols;
+	double *A = m1->arr, *B = m2->arr, *C = (*result)->arr;
+#ifdef INTRINSICS_SUPPORT
+	for (size_t i = 0; i < n; i += 2) {
+		_mm_store_pd(C + i, _mm_add_pd(_mm_load_pd(A + i), _mm_load_pd(B + i)));
 	}
+#else
+	for (size_t i = 0; i < n; ++i) {
+		C[i] = A[i] + B[i];
+	}
+#endif
 }
 
 void matrix_substract(Matrix *m1, Matrix *m2, Matrix **result) {
@@ -142,11 +189,17 @@ void matrix_substract(Matrix *m1, Matrix *m2, Matrix **result) {
 		return;
 	}
 	matrix_create0(m1->rows, m1->cols, result, false);
-	for (size_t i = 0; i < m1->rows; ++i) {
-		for (size_t j = 0; j < m1->cols; ++j) {
-			matrix_set(*result, i, j, matrix_get(m1, i, j) - matrix_get(m2, i, j));
-		}
+	size_t n = m1->rows * m1->cols;
+	double *A = m1->arr, *B = m2->arr, *C = (*result)->arr;
+#ifdef INTRINSICS_SUPPORT
+	for (size_t i = 0; i < n; i += 2) {
+		_mm_store_pd(C + i, _mm_sub_pd(_mm_load_pd(A + i), _mm_load_pd(B + i)));
 	}
+#else
+	for (size_t i = 0; i < n; ++i) {
+		C[i] = A[i] - B[i];
+	}
+#endif
 }
 
 void matrix_hadamard(Matrix *m1, Matrix *m2, Matrix **result) {

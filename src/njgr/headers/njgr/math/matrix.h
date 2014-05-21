@@ -9,6 +9,7 @@ typedef struct {
 	int magic;
 	double* arr;
 	size_t rows, cols;
+	size_t size, colsize;
 } Matrix;
 
 void matrix_create(size_t, size_t, Matrix**);
