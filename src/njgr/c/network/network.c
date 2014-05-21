@@ -110,7 +110,6 @@ void network_gradient_descent(Network* network, Vector* in, Vector* desiredOutpu
 	Matrix *outputs = NULL, *activations = NULL;
 	network_feed0(network, in, &outputs, &activations);
 
-	double  epsilon				   = 1;
 	ActivationFunction *activation = network->functions + network->depth - 2;
 	Matrix *weight                 = network->weights + network->depth - 2;
 	Matrix *output   			   = outputs + (network->depth - 1);
